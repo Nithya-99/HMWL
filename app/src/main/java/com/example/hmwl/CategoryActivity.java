@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.GridView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,17 @@ public class CategoryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         categoryRecyclerView = findViewById(R.id.category_rv);
+
+        List<GridProductModel> gridProductModelList = new ArrayList<>();
+        gridProductModelList.add(new GridProductModel(R.drawable.blueearrings,"Jhumka", "Rs.500/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.pinkjewelleryset2,"Jhumka","Rs.500/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.redbangles,"Jhumka","Rs.500/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.pinkpearlearrings,"Jhumka","Rs.500/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.blackjewelleryset,"Jhumka","Rs.500/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.blueyellowbangles,"Jhumka", "Rs.500/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.greenjewelleryset,"Jhumka","Rs.500/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.orangeearrings,"Jhumka","Rs.500/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.greenearrings,"Jhumka","Rs.500/-"));
 
 
     }

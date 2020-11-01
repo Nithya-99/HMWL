@@ -18,7 +18,8 @@ public class GridProductLayoutAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 16;
+
+        return gridProductModelList.size();
     }
 
     @Override

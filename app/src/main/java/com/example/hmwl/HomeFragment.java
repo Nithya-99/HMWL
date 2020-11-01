@@ -49,25 +49,51 @@ public class HomeFragment extends Fragment {
         categoryRecyclerView.setAdapter(categoryAdapter);
         categoryAdapter.notifyDataSetChanged();
 
-        List<GridProductModel> gridProductModelList = new ArrayList<>();
-        gridProductModelList.add(new GridProductModel(R.drawable.blueearrings,"Jhumka", "Rs.500/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.pinkjewelleryset2,"Jhumka","Rs.500/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.redbangles,"Jhumka","Rs.500/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.pinkpearlearrings,"Jhumka","Rs.500/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.blackjewelleryset,"Jhumka","Rs.500/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.blueyellowbangles,"Jhumka", "Rs.500/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.greenjewelleryset,"Jhumka","Rs.500/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.orangeearrings,"Jhumka","Rs.500/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.greenearrings,"Jhumka","Rs.500/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.darkblue,"Jhumka","Rs.500/-"));
+        List<GridProductModel> gridProductModelList = new ArrayList<GridProductModel>();
+        gridProductModelList.add(new GridProductModel(R.drawable.redbangles,"Red Bangles","Rs.650/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.pinkpearlearrings,"Pink Pearl Jhumka","Rs.450/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.blueearrings,"Blue Jhumka", "Rs.550/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.pinkjewelleryset2,"Pink Jewellery Set","Rs.700/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.blackjewelleryset,"Black Jewellery Set","Rs.700/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.blueyellowbangles,"Blue-Yellow Bangles", "Rs.650/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.greenjewelleryset,"Green Jewellery Set","Rs.700/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.orangeearrings,"Orange Jhumka","Rs.450/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.greenearrings,"Green Jhumka","Rs.200/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.redbangles,"Red Bangles","Rs.650/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.pinkpearlearrings,"Pink Pearl Jhumka","Rs.450/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.blueearrings,"Blue Jhumka", "Rs.550/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.pinkjewelleryset2,"Pink Jewellery Set","Rs.700/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.blackjewelleryset,"Black Jewellery Set","Rs.700/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.blueyellowbangles,"Blue-Yellow Bangles", "Rs.650/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.greenjewelleryset,"Green Jewellery Set","Rs.700/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.orangeearrings,"Orange Jhumka","Rs.450/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.greenearrings,"Green Jhumka","Rs.200/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.redbangles,"Red Bangles","Rs.650/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.pinkpearlearrings,"Pink Pearl Jhumka","Rs.450/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.blueearrings,"Blue Jhumka", "Rs.550/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.pinkjewelleryset2,"Pink Jewellery Set","Rs.700/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.blackjewelleryset,"Black Jewellery Set","Rs.700/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.blueyellowbangles,"Blue-Yellow Bangles", "Rs.650/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.greenjewelleryset,"Green Jewellery Set","Rs.700/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.orangeearrings,"Orange Jhumka","Rs.450/-"));
+        gridProductModelList.add(new GridProductModel(R.drawable.greenearrings,"Green Jhumka","Rs.200/-"));
+
 
 
         GridView gridView = view.findViewById(R.id.grid_product_layout_gridview);
-
         gridView.setAdapter(new GridProductLayoutAdapter(gridProductModelList));
 
         RecyclerView testing = view.findViewById(R.id.testing);
-        //LinearLayoutManager testingLayoutManager = new LinearLayoutManager();
+        LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
+        testingLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        testing.setLayoutManager(testingLayoutManager);
+
+        List<HomePageModel> homePageModelList = new ArrayList<>();
+        homePageModelList.add(new HomePageModel(0,"Title", gridProductModelList));
+
+        HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
+        testing.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
         return view;
     }
