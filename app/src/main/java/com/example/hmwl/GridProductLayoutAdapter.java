@@ -1,5 +1,6 @@
 package com.example.hmwl;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,14 @@ public class GridProductLayoutAdapter extends BaseAdapter {
             ImageView productImage = view.findViewById(R.id.productImage);
             TextView productTitle = view.findViewById(R.id.productName);
             TextView productPrice = view.findViewById(R.id.productPrice);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent productDetailsIntent = new Intent(view.getContext(), ProductDetailsActivity.class);
+                    view.getContext().startActivity(productDetailsIntent);
+                }
+            });
 
             productImage.setImageResource(gridProductModelList.get(position).getProductImage());
             productTitle.setText(gridProductModelList.get(position).getProductTitle());

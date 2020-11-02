@@ -27,6 +27,7 @@ public class HomeFragment extends Fragment {
     }
     private RecyclerView categoryRecyclerView;
     private CategoryAdapter categoryAdapter;
+    private RecyclerView testing;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,7 +39,7 @@ public class HomeFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         categoryRecyclerView.setLayoutManager(layoutManager);
 
-        List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();
+        final List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();
         categoryModelList.add(new CategoryModel("link","Home"));
         categoryModelList.add(new CategoryModel("link","Earrings"));
         categoryModelList.add(new CategoryModel("link","Bangles"));
@@ -78,12 +79,10 @@ public class HomeFragment extends Fragment {
         gridProductModelList.add(new GridProductModel(R.drawable.orangeearrings,"Orange Jhumka","Rs.450/-"));
         gridProductModelList.add(new GridProductModel(R.drawable.greenearrings,"Green Jhumka","Rs.200/-"));
 
+//        GridView gridView = view.findViewById(R.id.grid_product_layout_gridview);
+//        gridView.setAdapter(new GridProductLayoutAdapter(gridProductModelList));
 
-
-        GridView gridView = view.findViewById(R.id.grid_product_layout_gridview);
-        gridView.setAdapter(new GridProductLayoutAdapter(gridProductModelList));
-
-        RecyclerView testing = view.findViewById(R.id.testing);
+        testing = view.findViewById(R.id.hom_page_rv);
         LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
         testingLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         testing.setLayoutManager(testingLayoutManager);
