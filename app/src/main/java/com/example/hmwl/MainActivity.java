@@ -23,22 +23,27 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.Menu;
 import android.widget.FrameLayout;
+import android.widget.Button;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FrameLayout frameLayout;
+    private ImageView actionBarLogo;
+    private static final int ORDERS_FRAGMENT = 2;
     private static final int HOME_FRAGMENT = 0;
     private static final int CART_FRAGMENT = 1;
     private NavigationView navigationView;
 
-    private static int currentFragment;
+    private static int currentFragment=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        actionBarLogo = findViewById(R.id.actionbar_logo);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -107,12 +112,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Button button;
         int id = item.getItemId();
 
         if(id == R.id.nav_home){
             setFragment(new HomeFragment(),HOME_FRAGMENT);
         } else if (id == R.id.nav_my_orders) {
             // Handle the camera action
+            gotoFragment("My Orders", new MyOrderFragment(), ORDERS_FRAGMENT);
         } else if (id == R.id.nav_my_cart) {
             myCart();
         } else if (id == R.id.nav_my_wishlist) {
@@ -126,6 +133,18 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void gotoFragment(String title, Fragment fragment, int fragmentNo) {
+        actionBarLogo.setVisibility(View.GONE);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(title);
+        invalidateOptionsMenu();
+        setFragment(fragment, fragmentNo);
+        // delh abhi yaha pr humne neeche 3 kyu pass kiya na
+        // coz jab app ke left me navbar open karega tab tujhe jo options dekhenge usme se 3 rd wala option my cart ka h
+        // and user ko ye bhata rhe h apan ki agar usne 3rd wala option select kiya to ye sab hoga.....
+
     }
 
     private void setFragment(Fragment fragment, int fragmentNo){
