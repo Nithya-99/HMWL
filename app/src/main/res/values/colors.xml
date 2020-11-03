@@ -6,4 +6,5 @@
     <color name="green">#4caf50</color>
     <color name="successGreen">#11A10C</color>
     <color name="red">#ff0000</color>
+    <color name="black">#000000</color>
 </resources>
