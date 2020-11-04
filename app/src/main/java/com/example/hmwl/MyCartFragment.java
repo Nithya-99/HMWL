@@ -41,7 +41,7 @@ public class MyCartFragment extends Fragment {
         cartItemModelList.add(new CartItemModel(0,R.drawable.blueearrings,"Earings","Rs.1999/-","Rs.2999/-",2));
         cartItemModelList.add(new CartItemModel(0,R.drawable.blackjewelleryset,"Jewelleryset","Rs.999/-","Rs.1599/-",2));
         cartItemModelList.add(new CartItemModel(0,R.drawable.bluegoldenbangles,"Bangles","Rs.599/-","Rs.1000/-",2));
-        cartItemModelList.add(new CartItemModel(1,"Price (3 Items)", "Rs.2500/-","Free","Rs.501/-","2500/-"));
+        cartItemModelList.add(new CartItemModel(1,"Price (3 Items)", "Rs.2500/-","Free","You saved Rs.501/- in this order","2500/-"));
         CartAdapter cartAdapter = new CartAdapter(cartItemModelList);
         cartItemsRecyclerView.setAdapter(cartAdapter);
         cartAdapter.notifyDataSetChanged();

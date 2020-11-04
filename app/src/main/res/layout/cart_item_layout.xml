@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorAccent"
+    android:layout_margin="6dp"
+    android:background="@drawable/round_background"
     android:elevation="3dp">
 
     <ImageView
@@ -80,9 +81,10 @@
     <LinearLayout
         android:id="@+id/remove_item_btn"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
-        android:background="@color/green"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorAccent"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/product_quantity">
@@ -90,12 +92,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableStart="@drawable/delete"
+            android:drawableStart="@drawable/delete1"
             android:drawablePadding="4dp"
             android:gravity="center"
             android:text="Remove Item"
-            android:textColor="#ffffff" />
+            android:textSize="18sp"
+            android:textColor="@color/black" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider6"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="?android:attr/panelFullBackground"
+        app:layout_constraintBottom_toTopOf="@+id/remove_item_btn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
