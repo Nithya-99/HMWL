@@ -11,7 +11,9 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DeliveryActivity"></activity>
+        <activity android:name=".MyAdressesActivity"></activity>
+        <activity android:name=".AddAddressActivity" />
+        <activity android:name=".DeliveryActivity" />
         <activity android:name=".ProductDetailsActivity" />
         <activity android:name=".CategoryActivity" />
         <activity android:name=".dum" />

@@ -15,11 +15,6 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the  factory method to
- * create an instance of this fragment.
- */
 public class MyCartFragment extends Fragment {
 
     public MyCartFragment(){
@@ -54,7 +49,7 @@ public class MyCartFragment extends Fragment {
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent deliveryIntent = new Intent(getContext(), DeliveryActivity.class);
+                Intent deliveryIntent = new Intent(getContext(), AddAddressActivity.class);
                 getContext().startActivity(deliveryIntent);
             }
         });

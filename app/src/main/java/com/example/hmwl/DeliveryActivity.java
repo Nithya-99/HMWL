@@ -106,15 +106,15 @@ public class DeliveryActivity extends AppCompatActivity {
         cartAdapter.notifyDataSetChanged();
 
 
-//        changeOrAddNewAddressBtn.setVisibility(View.VISIBLE);
-//        changeOrAddNewAddressBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent myAddressesIntent = new Intent(DeliveryActivity.this,MyAddressesActivity.class);
+        changeOrAddNewAddressBtn.setVisibility(View.VISIBLE);
+        changeOrAddNewAddressBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myAddressesIntent = new Intent(DeliveryActivity.this,MyAdressesActivity.class);
 //                myAddressesIntent.putExtra("MODE",SELECT_ADDRESS);
-//                startActivity(myAddressesIntent);
-//            }
-//        });
+                startActivity(myAddressesIntent);
+            }
+        });
 
 //        continueBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
