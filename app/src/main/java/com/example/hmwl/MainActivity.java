@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity
     private static final int ORDERS_FRAGMENT = 2;
     private static final int HOME_FRAGMENT = 0;
     private static final int CART_FRAGMENT = 1;
+    private static final int ACCOUNT_FRAGMENT = 5;
     private NavigationView navigationView;
-
     private static int currentFragment=-1;
 
     @Override
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         actionBarLogo = findViewById(R.id.actionbar_logo);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         if (currentFragment == HOME_FRAGMENT) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             getMenuInflater().inflate(R.menu.main, menu);
         }
         return true;
@@ -103,6 +104,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void myCart() {
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("My Cart");
+        actionBarLogo.setVisibility(View.GONE);
         invalidateOptionsMenu();
         setFragment(new MyCartFragment(),CART_FRAGMENT);
         navigationView.getMenu().getItem(2).setChecked(true);
@@ -116,6 +120,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if(id == R.id.nav_home){
+            actionBarLogo.setVisibility(View.VISIBLE);
+            invalidateOptionsMenu();
             setFragment(new HomeFragment(),HOME_FRAGMENT);
         } else if (id == R.id.nav_my_orders) {
             // Handle the camera action
@@ -125,7 +131,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_my_wishlist) {
 
         } else if (id == R.id.nav_my_account) {
-
+            gotoFragment("My Account", new MyAccountFragment(), ACCOUNT_FRAGMENT);
         } else if(id == R.id.nav_sign_out){
 
         }
@@ -148,9 +154,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setFragment(Fragment fragment, int fragmentNo){
-        currentFragment = fragmentNo;
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(frameLayout.getId(), fragment);
-        fragmentTransaction.commit();
+        if (fragmentNo != currentFragment) {
+            currentFragment = fragmentNo;
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(frameLayout.getId(), fragment);
+            fragmentTransaction.commit();
+        }
     }
 }
