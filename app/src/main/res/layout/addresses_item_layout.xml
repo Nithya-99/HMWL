@@ -74,6 +74,7 @@
         android:elevation="3dp"
         android:orientation="vertical"
         android:visibility="gone"
+        android:background="@color/grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 

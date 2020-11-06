@@ -22,9 +22,9 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
 
     private List<AddressesModel> addressesModelList;
     private int MODE;
-    private int preSelectedPosition;
+    private int preSelectedPosition ;
 
-    public AddressesAdapter(List<AddressesModel> addressesModelList, int MODE) {
+    public AddressesAdapter(List<AddressesModel> addressesModelList,int MODE) {
         this.addressesModelList = addressesModelList;
         this.MODE = MODE;
     }
@@ -44,7 +44,6 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
         String address = addressesModelList.get(position).getAddress();
         String pincode = addressesModelList.get(position).getPincode();
         Boolean selected = addressesModelList.get(position).getSelected();
-//        String mobileNo = addressesModelList.get(position).getMobileNo();
 
         viewholder.setData(username,address,pincode,selected,position);
     }
@@ -60,10 +59,9 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
         private TextView fullname;
         private TextView address;
         private TextView pincode;
-        private ImageView icon;
-        //private TextView editIcon, removeIcon;
-//        private ImageView icon;// ye wo checkmark ka symbol h;
-//        private LinearLayout optionContainer;
+        private TextView editIcon, removeIcon;
+        private ImageView icon;// ye wo checkmark ka symbol h;
+        private LinearLayout optionContainer;
 
         public Viewholder(@NonNull View itemView) {
             super(itemView);
@@ -71,17 +69,20 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
             address = itemView.findViewById(R.id.address);
             pincode = itemView.findViewById(R.id.pincode);
             icon = itemView.findViewById(R.id.icon_view);
-//            editIcon = itemView.findViewById(R.id.edit_icon);
-//            removeIcon = itemView.findViewById(R.id.remove_icon);
-//            optionContainer = itemView.findViewById(R.id.option_container);
+            editIcon = itemView.findViewById(R.id.edit_icon);
+            removeIcon = itemView.findViewById(R.id.remove_icon);
+            optionContainer = itemView.findViewById(R.id.option_container);
         }
-
-        private void setData(String username, String userAddress, String userPincode, Boolean selected, int position) {
+        private void setData(String username, String userAddress, String userPincode, Boolean selected, final int position){
             fullname.setText(username);
             address.setText(userAddress);
             pincode.setText(userPincode);
 
             if(MODE == SELECT_ADDRESS){
+
+                editIcon.setVisibility(View.GONE);
+                removeIcon.setVisibility(View.GONE);
+
                 icon.setImageResource(R.drawable.check);
                 if(selected){
                     icon.setVisibility(View.VISIBLE);
@@ -93,10 +94,11 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(preSelectedPosition != position)
-                        {
+
+                        if(preSelectedPosition != position) {
                             addressesModelList.get(position).setSelected(true);
                             addressesModelList.get(preSelectedPosition).setSelected(false);
+
                             refreshItem(preSelectedPosition, position);
                             preSelectedPosition = position;
                         }
@@ -105,6 +107,27 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
             }
             else if(MODE == MANAGE_ADDRESS){
 
+                editIcon.setVisibility(View.VISIBLE);
+                removeIcon.setVisibility(View.VISIBLE);
+
+                optionContainer.setVisibility(View.GONE);
+                icon.setImageResource(R.drawable.vertical_dots);
+                icon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        optionContainer.setVisibility(View.VISIBLE);
+                        refreshItem(preSelectedPosition,preSelectedPosition);
+                        preSelectedPosition = position;
+                    }
+                });
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        refreshItem(preSelectedPosition,preSelectedPosition);
+                        preSelectedPosition = -1;
+                    }
+                });
             }
         }
     }
