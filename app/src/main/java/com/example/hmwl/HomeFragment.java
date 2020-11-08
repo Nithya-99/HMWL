@@ -23,6 +23,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.hmwl.DBqueries.categoryModelList;
+import static com.example.hmwl.DBqueries.firebaseFirestore;
+import static com.example.hmwl.DBqueries.lists;
+import static com.example.hmwl.DBqueries.loadCategories;
+import static com.example.hmwl.DBqueries.loadFragmentData;
+import static com.example.hmwl.DBqueries.loadedCategoriesName;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,9 +42,10 @@ public class HomeFragment extends Fragment {
     }
     private RecyclerView categoryRecyclerView;
     private CategoryAdapter categoryAdapter;
-    private RecyclerView testing;
-    private List<CategoryModel> categoryModelList;
-    private FirebaseFirestore firebaseFirestore;
+    private RecyclerView homePageRecyclerView;
+    private HomePageAdapter adapter;
+//    private List<CategoryModel> categoryModelList;
+//    private FirebaseFirestore firebaseFirestore;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,72 +57,35 @@ public class HomeFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         categoryRecyclerView.setLayoutManager(layoutManager);
 
-        categoryModelList = new ArrayList<CategoryModel>();
+
 
         categoryAdapter = new CategoryAdapter(categoryModelList);
         categoryRecyclerView.setAdapter(categoryAdapter);
 
+        if(categoryModelList.size() == 0){
+            loadCategories(categoryAdapter,getContext());
+        }else {
+            categoryAdapter.notifyDataSetChanged();
+        }
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("CATEGORIES").orderBy("index").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                        categoryModelList.add(new CategoryModel(documentSnapshot.get("icon").toString(), documentSnapshot.get("categoryName").toString()));
-                    }
-                    categoryAdapter.notifyDataSetChanged();
-                }else{
-                    String error=task.getException().getMessage();
-                    Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        //List<GridProductModel> gridProductModelList = new ArrayList<GridProductModel>();
 
-        List<GridProductModel> gridProductModelList = new ArrayList<GridProductModel>();
-        gridProductModelList.add(new GridProductModel(R.drawable.redbangles,"Red Bangles","Rs.650/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.pinkpearlearrings,"Pink Pearl Jhumka","Rs.450/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.blueearrings,"Blue Jhumka", "Rs.550/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.pinkjewelleryset2,"Pink Jewellery Set","Rs.700/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.blackjewelleryset,"Black Jewellery Set","Rs.700/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.blueyellowbangles,"Blue-Yellow Bangles", "Rs.650/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.greenjewelleryset,"Green Jewellery Set","Rs.700/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.orangeearrings,"Orange Jhumka","Rs.450/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.greenearrings,"Green Jhumka","Rs.200/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.redbangles,"Red Bangles","Rs.650/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.pinkpearlearrings,"Pink Pearl Jhumka","Rs.450/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.blueearrings,"Blue Jhumka", "Rs.550/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.pinkjewelleryset2,"Pink Jewellery Set","Rs.700/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.blackjewelleryset,"Black Jewellery Set","Rs.700/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.blueyellowbangles,"Blue-Yellow Bangles", "Rs.650/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.greenjewelleryset,"Green Jewellery Set","Rs.700/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.orangeearrings,"Orange Jhumka","Rs.450/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.greenearrings,"Green Jhumka","Rs.200/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.redbangles,"Red Bangles","Rs.650/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.pinkpearlearrings,"Pink Pearl Jhumka","Rs.450/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.blueearrings,"Blue Jhumka", "Rs.550/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.pinkjewelleryset2,"Pink Jewellery Set","Rs.700/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.blackjewelleryset,"Black Jewellery Set","Rs.700/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.blueyellowbangles,"Blue-Yellow Bangles", "Rs.650/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.greenjewelleryset,"Green Jewellery Set","Rs.700/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.orangeearrings,"Orange Jhumka","Rs.450/-"));
-        gridProductModelList.add(new GridProductModel(R.drawable.greenearrings,"Green Jhumka","Rs.200/-"));
-
-//        GridView gridView = view.findViewById(R.id.grid_product_layout_gridview);
-//        gridView.setAdapter(new GridProductLayoutAdapter(gridProductModelList));
-
-        testing = view.findViewById(R.id.hom_page_rv);
+        homePageRecyclerView = view.findViewById(R.id.hom_page_rv);
         LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
         testingLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        testing.setLayoutManager(testingLayoutManager);
+        homePageRecyclerView.setLayoutManager(testingLayoutManager);
 
-        List<HomePageModel> homePageModelList = new ArrayList<>();
-        homePageModelList.add(new HomePageModel(0,"Title", gridProductModelList));
+        if(lists.size() == 0){
+            loadedCategoriesName.add("HOME");
+            lists.add(new ArrayList<HomePageModel>());
+            adapter = new HomePageAdapter(lists.get(0));
+            loadFragmentData(adapter,getContext(),0, "HOME");
+        }else {
+            adapter = new HomePageAdapter(lists.get(0));
+            adapter.notifyDataSetChanged();
+        }
 
-        HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
-        testing.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        homePageRecyclerView.setAdapter(adapter);
 
         return view;
     }

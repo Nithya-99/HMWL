@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.List;
 
 public class GridProductLayoutAdapter extends BaseAdapter {
@@ -50,9 +53,11 @@ public class GridProductLayoutAdapter extends BaseAdapter {
                 }
             });
 
-            productImage.setImageResource(gridProductModelList.get(position).getProductImage());
+            Glide.with(parent.getContext()).load(gridProductModelList.get(position).getProductImage())
+                    .apply(new RequestOptions().placeholder(R.drawable.home_blue)).into(productImage);
+            //productImage.setImageResource(gridProductModelList.get(position).getProductImage());
             productTitle.setText(gridProductModelList.get(position).getProductTitle());
-            productPrice.setText(gridProductModelList.get(position).getProductPrice());
+            productPrice.setText("Rs."+gridProductModelList.get(position).getProductPrice()+"/-");
         } else {
             view = convertView;
         }

@@ -1,7 +1,9 @@
 package com.example.hmwl;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -13,9 +15,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +32,10 @@ import java.util.List;
 public class ProductDetailsActivity extends AppCompatActivity {
 
     private ViewPager ProductImagesViewPager;
+    private TextView productTitle, productPrice, tvCodIndicator;
+    private ImageView codIndicator;
 
+    private ConstraintLayout productDetailsTabsContainer;
     private ViewPager ProductDetailsViewPager;
     private TabLayout ProductDetailsTabLayout;
 
@@ -31,6 +43,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private static boolean ALREADY_ADDED_TO_WISHLIST = false;
     private FloatingActionButton addToWishlistBtn;
+
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +57,54 @@ public class ProductDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ProductImagesViewPager = findViewById(R.id.product_image_viewpager);
+        productTitle = findViewById(R.id.product_title);
+        productPrice = findViewById(R.id.product_price);
+        codIndicator = findViewById(R.id.cod_indicator_imageview);
+        tvCodIndicator = findViewById(R.id.cod_indicator_textview);
         addToWishlistBtn = findViewById(R.id.add_to_wishlist_btn);
+
+        productDetailsTabsContainer = findViewById(R.id.product_details_tabs_container);
         ProductDetailsViewPager = findViewById(R.id.product_details_vp);
         ProductDetailsTabLayout = findViewById(R.id.product_details_tl);
         buyNowBtn = findViewById(R.id.buy_now_btn);
 
-        List<Integer> productImages = new ArrayList<>();
-        productImages.add(R.drawable.blueyellowbangles);
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        List<String> productImages = new ArrayList<>();
 
-        ProductImagesAdapter productImagesAdapter = new ProductImagesAdapter(productImages);
-        ProductImagesViewPager.setAdapter(productImagesAdapter);
+        firebaseFirestore.collection("PRODUCTS").document("llKs9hrpXdUyZWhS0Ggv").get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            for(long x =0; x < (long)documentSnapshot.get("no_of_product_images") + 1; x++){
+                                productImages.add(documentSnapshot.get("product_image_"+x).toString());
+                            }
+                            ProductImagesAdapter productImagesAdapter = new ProductImagesAdapter(productImages);
+                            ProductImagesViewPager.setAdapter(productImagesAdapter);
+                            productTitle.setText(documentSnapshot.get("product_title").toString());
+                            productTitle.setText("Rs." + documentSnapshot.get("product_price").toString() + "/-");
+                            if((boolean)documentSnapshot.get("COD")){
+                                codIndicator.setVisibility(View.VISIBLE);
+                                tvCodIndicator.setVisibility(View.VISIBLE);
+                            }
+                            else {
+                                codIndicator.setVisibility(View.INVISIBLE);
+                                tvCodIndicator.setVisibility(View.INVISIBLE);
+                            }
+                            if((boolean)documentSnapshot.get("use_tab_layout")){
+                                productDetailsTabsContainer.setVisibility(View.VISIBLE);
+                            }else{
+
+                            }
+                        }else{
+                            String error = task.getException().getMessage();
+                            Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+
 
         addToWishlistBtn.setOnClickListener(new View.OnClickListener() {
             @Override

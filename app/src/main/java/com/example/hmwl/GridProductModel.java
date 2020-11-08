@@ -1,20 +1,30 @@
 package com.example.hmwl;
 
 public class GridProductModel {
-    private int productImage;
+    private String productID;
+    private String productImage;
     private String productTitle, productPrice;
 
-    public GridProductModel(int productImage, String productTitle, String productPrice) {
+    public GridProductModel(String productID, String productImage, String productTitle, String productPrice) {
+        this.productID = productID;
         this.productImage = productImage;
         this.productTitle = productTitle;
         this.productPrice = productPrice;
     }
 
-    public int getProductImage() {
+    public String getProductID() {
+        return productID;
+    }
+
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
+
+    public String getProductImage() {
         return productImage;
     }
 
-    public void setProductImage(int productImage) {
+    public void setProductImage(String productImage) {
         this.productImage = productImage;
     }
 
