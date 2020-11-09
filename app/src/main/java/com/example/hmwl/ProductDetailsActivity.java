@@ -39,6 +39,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private ViewPager ProductDetailsViewPager;
     private TabLayout ProductDetailsTabLayout;
 
+    private String productDescription;
+    //private Integer tabPosition = -1;
+    private List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
+
     private Button buyNowBtn;
 
     private static boolean ALREADY_ADDED_TO_WISHLIST = false;
@@ -77,13 +81,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if(task.isSuccessful()){
                             DocumentSnapshot documentSnapshot = task.getResult();
-                            for(long x =0; x < (long)documentSnapshot.get("no_of_product_images") + 1; x++){
+                            for(long x = 1; x < (long)documentSnapshot.get("no_of_product_images") + 1; x++){
                                 productImages.add(documentSnapshot.get("product_image_"+x).toString());
                             }
                             ProductImagesAdapter productImagesAdapter = new ProductImagesAdapter(productImages);
                             ProductImagesViewPager.setAdapter(productImagesAdapter);
                             productTitle.setText(documentSnapshot.get("product_title").toString());
-                            productTitle.setText("Rs." + documentSnapshot.get("product_price").toString() + "/-");
+                            productPrice.setText("Rs." + documentSnapshot.get("product_price").toString() + "/-");
                             if((boolean)documentSnapshot.get("COD")){
                                 codIndicator.setVisibility(View.VISIBLE);
                                 tvCodIndicator.setVisibility(View.VISIBLE);
@@ -94,9 +98,16 @@ public class ProductDetailsActivity extends AppCompatActivity {
                             }
                             if((boolean)documentSnapshot.get("use_tab_layout")){
                                 productDetailsTabsContainer.setVisibility(View.VISIBLE);
+                                productDescription = documentSnapshot.get("product_description").toString();
+                                //ProductSpecificationFragment.productSpecificationModelList
+                                for(long x = 1; x < (long)documentSnapshot.get("spec_total_fields")+1; x++){
+                                productSpecificationModelList.add(new ProductSpecificationModel(documentSnapshot
+                                        .get("spec_field_"+x+"_name").toString(), documentSnapshot.get("spec_field_"+x+"_value").toString()));
+                                }
                             }else{
 
                             }
+                            ProductDetailsViewPager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(),ProductDetailsTabLayout.getTabCount(),productDescription,productSpecificationModelList));
                         }else{
                             String error = task.getException().getMessage();
                             Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_LONG).show();
@@ -119,11 +130,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         });
 
-        ProductDetailsViewPager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(),ProductDetailsTabLayout.getTabCount()));
+
         ProductDetailsViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(ProductDetailsTabLayout));
         ProductDetailsTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                //tabPosition = tab.getPosition();
                 ProductDetailsViewPager.setCurrentItem(tab.getPosition());
             }
 
