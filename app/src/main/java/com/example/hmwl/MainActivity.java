@@ -134,14 +134,14 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void myCart() {
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle("My Cart");
-        actionBarLogo.setVisibility(View.GONE);
-        invalidateOptionsMenu();
-        setFragment(new MyCartFragment(),CART_FRAGMENT);
-        navigationView.getMenu().getItem(2).setChecked(true);
-    }
+//    private void myCart() {
+//        getSupportActionBar().setDisplayShowTitleEnabled(true);
+//        getSupportActionBar().setTitle("My Cart");
+//        actionBarLogo.setVisibility(View.GONE);
+//        invalidateOptionsMenu();
+//        setFragment(new MyCartFragment(),CART_FRAGMENT);
+//        navigationView.getMenu().getItem(2).setChecked(true);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
             gotoFragment("My Orders", new MyOrderFragment(), ORDERS_FRAGMENT);
         } else if (id == R.id.nav_my_cart) {
-            myCart();
+            gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
         } else if (id == R.id.nav_my_wishlist) {
 
         } else if (id == R.id.nav_my_account) {
@@ -178,6 +178,9 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setTitle(title);
         invalidateOptionsMenu();
         setFragment(fragment, fragmentNo);
+        if (fragmentNo == CART_FRAGMENT){
+            navigationView.getMenu().getItem(3).setChecked(true);
+        }
         // delh abhi yaha pr humne neeche 3 kyu pass kiya na
         // coz jab app ke left me navbar open karega tab tujhe jo options dekhenge usme se 3 rd wala option my cart ka h
         // and user ko ye bhata rhe h apan ki agar usne 3rd wala option select kiya to ye sab hoga.....

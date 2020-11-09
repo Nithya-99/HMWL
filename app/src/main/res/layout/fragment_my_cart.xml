@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#d9d9d9"
+    android:background="@drawable/background"
     tools:context=".MyCartFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -22,9 +22,9 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:background="@color/black"
         android:elevation="8dp"
         android:orientation="horizontal"
+        android:background="@drawable/round_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -35,6 +35,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="vertical"
+            android:elevation="3dp"
             android:paddingStart="16dp">
 
             <TextView
@@ -44,7 +45,7 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="45dp"
                 android:text="Rs. 499/-"
-                android:textColor="#ffff"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -54,7 +55,7 @@
                 android:text="Total Amount"
                 android:layout_gravity="right"
                 android:layout_marginRight="45dp"
-                android:textColor="#ffff"
+                android:textColor="@color/black"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -63,8 +64,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:backgroundTint="?android:attr/colorPressedHighlight"
+            android:background="@color/green"
+            android:textColor="@color/colorAccent"
             android:text="continue"
             android:textSize="16sp"
             android:textStyle="bold" />
