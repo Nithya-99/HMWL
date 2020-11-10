@@ -66,14 +66,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="ADD TO CART"
                 android:drawableEnd="@drawable/black_cart"
-                android:padding="8dp"
+                android:drawableTint="#485F70"
                 android:gravity="center"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:padding="8dp"
+                android:text="ADD TO CART"
                 android:textColor="#485F70"
-                android:drawableTint="#485F70"></TextView>
+                android:textSize="16sp"
+                android:textStyle="bold"></TextView>
         </LinearLayout>
 
         <Button

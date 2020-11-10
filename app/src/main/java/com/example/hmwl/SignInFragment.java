@@ -50,6 +50,8 @@ public class SignInFragment extends Fragment {
 
     private String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+.[a-z]+";
 
+    public static boolean disableCloseBtn =false;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +69,11 @@ public class SignInFragment extends Fragment {
         cancelBtn = view.findViewById(R.id.signin_cancelBtn);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        if(disableCloseBtn){
+            cancelBtn.setVisibility(View.GONE);
+        }else {
+            cancelBtn.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 
@@ -171,8 +178,13 @@ public class SignInFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(getActivity(),"Login successful", Toast.LENGTH_SHORT).show();
-                            Intent mainPage = new Intent(getActivity(),MainActivity.class);
-                            startActivity(mainPage);
+                            if(disableCloseBtn){
+                                disableCloseBtn = false;
+                            }
+                            else {
+                                Intent mainPage = new Intent(getActivity(),MainActivity.class);
+                                startActivity(mainPage);
+                            }
                             getActivity().finish();
                         }else{
                             loginBtn.setEnabled(true);
