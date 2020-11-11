@@ -244,7 +244,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
             else {
                 Intent cartIntent = new Intent(ProductDetailsActivity.this,MainActivity.class);
-                //showCart = true;
+                MainActivity.showCart = true;
+//                showCart = true;
                 startActivity(cartIntent);
                 return true;
             }
