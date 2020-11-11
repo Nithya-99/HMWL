@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ public class HomeFragment extends Fragment {
     public HomeFragment() {
         // Required empty public constructor
     }
+//    public static SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView categoryRecyclerView;
     private CategoryAdapter categoryAdapter;
     private RecyclerView homePageRecyclerView;
@@ -56,6 +58,7 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         categoryRecyclerView.setLayoutManager(layoutManager);
+//        swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
 
 
 
@@ -86,6 +89,22 @@ public class HomeFragment extends Fragment {
         }
 
         homePageRecyclerView.setAdapter(adapter);
+
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                swipeRefreshLayout.setRefreshing(true);
+//                categoryModelList.clear();
+//                lists.clear();
+//                loadedCategoriesName.clear();
+//
+//                loadCategories(categoryAdapter,getContext());
+//
+//                loadedCategoriesName.add("HOME");
+//                lists.add(new ArrayList<HomePageModel>());
+//                loadFragmentData(adapter,getContext(),0, "HOME");
+//            }
+//        });
 
         return view;
     }

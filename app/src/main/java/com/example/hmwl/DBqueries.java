@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -15,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBqueries {
-
+    public static FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    public static FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    
     public static FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     public static List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();
 
@@ -42,7 +46,7 @@ public class DBqueries {
                         }
                     }
                 });
-
+        
     }
 
     public static void loadFragmentData(final HomePageAdapter adapter, final Context context, final int index, String categoryName){
@@ -69,6 +73,7 @@ public class DBqueries {
                                 }
                             }
                             adapter.notifyDataSetChanged();
+                           // HomeFragment.swipeRefreshLayout.setRefreshing(false);
                         }else{
                             String error=task.getException().getMessage();
                             Toast.makeText(context, error, Toast.LENGTH_LONG).show();

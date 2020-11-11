@@ -34,6 +34,8 @@ public class ProductSpecificationFragment extends Fragment {
     }
 
     private RecyclerView productSpecificationRecyclerView;
+    public List<ProductSpecificationModel> productSpecificationModelList;
+    //public static List<ProductSpecificationModel> productSpecificationModelList;
 
     /**
      * Use this factory method to create a new instance of
@@ -73,11 +75,11 @@ public class ProductSpecificationFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         productSpecificationRecyclerView.setLayoutManager(linearLayoutManager);
 
-        List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
-        productSpecificationModelList.add(new ProductSpecificationModel("Stone", "Kundan"));
-        productSpecificationModelList.add(new ProductSpecificationModel("Colour", "Blue and Yellow"));
-        productSpecificationModelList.add(new ProductSpecificationModel("Base Material", "Plastic"));
-        productSpecificationModelList.add(new ProductSpecificationModel("Thread", "Double Bell Silk Thread"));
+        //List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
+//        productSpecificationModelList.add(new ProductSpecificationModel("Stone", "Kundan"));
+//        productSpecificationModelList.add(new ProductSpecificationModel("Colour", "Blue and Yellow"));
+//        productSpecificationModelList.add(new ProductSpecificationModel("Base Material", "Plastic"));
+//        productSpecificationModelList.add(new ProductSpecificationModel("Thread", "Double Bell Silk Thread"));
 
         ProductSpecificationAdapter productSpecificationAdapter = new ProductSpecificationAdapter(productSpecificationModelList);
         productSpecificationRecyclerView.setAdapter(productSpecificationAdapter);
