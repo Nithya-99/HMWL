@@ -26,6 +26,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -57,6 +59,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
 
     private Dialog signInDialog;
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         List<String> productImages = new ArrayList<>();
 
-        firebaseFirestore.collection("PRODUCTS").document("llKs9hrpXdUyZWhS0Ggv").get()
+        firebaseFirestore.collection("PRODUCTS").document(getIntent().getStringExtra("PRODUCT_ID")).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -163,7 +166,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         buyNowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(DBqueries.currentUser == null){
+                if(currentUser == null){
                     signInDialog.show();
                 }else{
                     Intent deliveryIntent = new Intent(ProductDetailsActivity.this, DeliveryActivity.class);
@@ -175,7 +178,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         addToCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(DBqueries.currentUser == null){
+                if(currentUser == null){
                     signInDialog.show();
                 }else {
                     //todo: add to cart
@@ -216,6 +219,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.search_and_cart_icon, menu);
@@ -239,13 +248,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
             return true;
         }else if(id == R.id.mai_cart_icon){
             //todo: cart
-            if(DBqueries.currentUser == null){
+            if(currentUser == null){
                 signInDialog.show();
             }
             else {
                 Intent cartIntent = new Intent(ProductDetailsActivity.this,MainActivity.class);
                 MainActivity.showCart = true;
-//                showCart = true;
                 startActivity(cartIntent);
                 return true;
             }

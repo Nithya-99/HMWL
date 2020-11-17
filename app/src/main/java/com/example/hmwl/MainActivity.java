@@ -16,6 +16,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     private int currentFragment=-1;
     private Dialog signInDialog;
     public static Boolean showCart = false;
+    private FirebaseUser currentUser;
 
     @SuppressLint("WrongConstant")
     @Override
@@ -77,11 +80,7 @@ public class MainActivity extends AppCompatActivity
             setFragment(new HomeFragment(), HOME_FRAGMENT);
         }
 
-        if(DBqueries.currentUser == null){
-            navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
-        }else {
-            navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
-        }
+
         signInDialog = new Dialog(MainActivity.this);
         signInDialog.setContentView(R.layout.sign_in_dialog);
         signInDialog.setCancelable(true);
@@ -111,6 +110,17 @@ public class MainActivity extends AppCompatActivity
                 startActivity(registerIntent);
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser == null){
+            navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
+        }else {
+            navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
+        }
     }
 
     @Override
@@ -161,7 +171,7 @@ public class MainActivity extends AppCompatActivity
             //todo: notification
             return true;
         }else if(id == R.id.mai_cart_icon){
-            if(DBqueries.currentUser == null){
+            if(currentUser == null){
                 signInDialog.show();
             }else{
                 gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
@@ -194,14 +204,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         Button button;
 
-        if(DBqueries.currentUser != null) {
+        if(currentUser != null) {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
                 actionBarLogo.setVisibility(View.VISIBLE);
                 invalidateOptionsMenu();
                 setFragment(new HomeFragment(), HOME_FRAGMENT);
             } else if (id == R.id.nav_my_orders) {
-                // Handle the camera action
                 gotoFragment("My Orders", new MyOrderFragment(), ORDERS_FRAGMENT);
             } else if (id == R.id.nav_my_cart) {
                 gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
@@ -210,7 +219,10 @@ public class MainActivity extends AppCompatActivity
             } else if (id == R.id.nav_my_account) {
                 gotoFragment("My Account", new MyAccountFragment(), ACCOUNT_FRAGMENT);
             } else if (id == R.id.nav_sign_out) {
-
+                FirebaseAuth.getInstance().signOut();
+                Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(registerIntent);
+                finish();
             }
             drawer.closeDrawer(GravityCompat.START);
             return true;
