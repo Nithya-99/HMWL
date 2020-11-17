@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBqueries {
-    public static FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    public static FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    //public static FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    //public static FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     
     public static FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     public static List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();
