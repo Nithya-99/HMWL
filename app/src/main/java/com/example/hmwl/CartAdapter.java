@@ -13,6 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter {
@@ -54,12 +57,12 @@ public class CartAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         switch (cartItemModelList.get(position).getType()){
             case CartItemModel.CART_ITEM:
-                int resource = cartItemModelList.get(position).getProductImage();
+                String productID = cartItemModelList.get(position).getProductID();
+                String resource = cartItemModelList.get(position).getProductImage();
                 String title = cartItemModelList.get(position).getProductTitle();
                 String productPriceText = cartItemModelList.get(position).getProductPrice();
-                String cuttedPriceText = cartItemModelList.get(position).getCuttedPrice();
 
-                ((CartItemViewholder)viewHolder).setItemDetails(resource,title,productPriceText,cuttedPriceText);
+                ((CartItemViewholder)viewHolder).setItemDetails(productID ,resource,title,productPriceText);
                 break;
             case CartItemModel.TOTAL_AMOUNT:
                 String totalItems = cartItemModelList.get(position).getTotalItems();
@@ -85,7 +88,6 @@ public class CartAdapter extends RecyclerView.Adapter {
         private ImageView productImage;
         private TextView productTitle;
         private TextView productPrice;
-        private TextView cuttedPrice;
         private TextView productQuantity;
 
         public CartItemViewholder(@NonNull View itemView) {
@@ -93,14 +95,12 @@ public class CartAdapter extends RecyclerView.Adapter {
             productImage = itemView.findViewById(R.id.product_image);
             productTitle = itemView.findViewById(R.id.product_title);
             productPrice = itemView.findViewById(R.id.product_price);
-            cuttedPrice = itemView.findViewById(R.id.cutted_price);
             productQuantity = itemView.findViewById(R.id.product_quantity);
         }
-        private void setItemDetails(int resource, String title, String productPriceText,String cuttedPriceText){
-            productImage.setImageResource(resource);
+        private void setItemDetails(String productID, String resource, String title, String productPriceText){
+            Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.placeholder)).into(productImage);
             productTitle.setText(title);
             productPrice.setText(productPriceText);
-            cuttedPrice.setText(cuttedPriceText);
 
             productQuantity.setOnClickListener(new View.OnClickListener() {
                 @Override

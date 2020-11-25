@@ -1,5 +1,6 @@
 package com.example.hmwl;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -22,13 +23,23 @@ public class MyCartFragment extends Fragment {
     }
 
     private RecyclerView cartItemsRecyclerView;
+//    private Dialog loadingDialog;
+    public static CartAdapter cartAdapter;
     private Button continueBtn;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_cart, container, false);
+
+        ////loading dialog
+//        loadingDialog = new Dialog(getContext());
+//        loadingDialog.setContentView(R.layout.loading_progress_dialog);
+//        loadingDialog.setCancelable(false);
+//        loadingDialog.getWindow().setBackgroundDrawable(getContext().getDrawable(R.drawable.slider_background));
+//        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        loadingDialog.show();
+        ////loading dialog
 
         cartItemsRecyclerView = view.findViewById(R.id.cart_items_recyclerview);
         continueBtn = view.findViewById(R.id.cart_continue_btn);
@@ -37,12 +48,15 @@ public class MyCartFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         cartItemsRecyclerView.setLayoutManager(layoutManager);
 
-        List<CartItemModel> cartItemModelList = new ArrayList<>();
-        cartItemModelList.add(new CartItemModel(0,R.drawable.blueearrings,"Earings","Rs.1999/-","Rs.2999/-",2));
-        cartItemModelList.add(new CartItemModel(0,R.drawable.blackjewelleryset,"Jewelleryset","Rs.999/-","Rs.1599/-",2));
-        cartItemModelList.add(new CartItemModel(0,R.drawable.bluegoldenbangles,"Bangles","Rs.599/-","Rs.1000/-",2));
-        cartItemModelList.add(new CartItemModel(1,"Price (3 Items)", "Rs.2500/-","Free","You saved Rs.501/- in this order","2500/-"));
-        CartAdapter cartAdapter = new CartAdapter(cartItemModelList);
+        if (DBqueries.cartItemModelList.size() == 0){
+            DBqueries.cartList.clear();
+            DBqueries.loadCartList(getContext(),true);
+        }
+
+//        List<CartItemModel> cartItemModelList = new ArrayList<>();
+//        cartItemModelList.add(new CartItemModel(1,"Price (3 Items)", "Rs.2500/-","Free","You saved Rs.501/- in this order","2500/-"));
+
+        cartAdapter = new CartAdapter(DBqueries.cartItemModelList);
         cartItemsRecyclerView.setAdapter(cartAdapter);
         cartAdapter.notifyDataSetChanged();
 
