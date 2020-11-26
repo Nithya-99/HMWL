@@ -17,26 +17,34 @@ public class CartItemModel {
 
     ////cart item
 
-    private int productImage;
+    private String productID;
+    private String productImage;
     private String productTitle;
     private String productPrice;
-    private String cuttedPrice;
     private int productQuantity;
 
-    public CartItemModel(int type, int productImage, String productTitle, String productPrice, String cuttedPrice, int productQuantity) {
+    public CartItemModel(int type, String productID,String productImage, String productTitle, String productPrice, int productQuantity) {
         this.type = type;
+        this.productID = productID;
         this.productImage = productImage;
         this.productTitle = productTitle;
         this.productPrice = productPrice;
-        this.cuttedPrice = cuttedPrice;
         this.productQuantity = productQuantity;
     }
 
-    public int getProductImage() {
+    public String getProductID() {
+        return productID;
+    }
+
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
+
+    public String getProductImage() {
         return productImage;
     }
 
-    public void setProductImage(int productImage) {
+    public void setProductImage(String productImage) {
         this.productImage = productImage;
     }
 
@@ -54,14 +62,6 @@ public class CartItemModel {
 
     public void setProductPrice(String productPrice) {
         this.productPrice = productPrice;
-    }
-
-    public String getCuttedPrice() {
-        return cuttedPrice;
-    }
-
-    public void setCuttedPrice(String cuttedPrice) {
-        this.cuttedPrice = cuttedPrice;
     }
 
     public int getProductQuantity() {
@@ -82,7 +82,7 @@ public class CartItemModel {
     private String savedAmount;
     private String totalAmount;
 
-    public CartItemModel(int type, String totalItems, String totalItemPrice, String deliveryPrice, String savedAmount, String totalAmount) {
+    public CartItemModel(int type, String totalItems, String totalItemPrice, String deliveryPrice, String savedAmount) {
         this.type = type;
         this.totalItems = totalItems;
         this.totalItemPrice = totalItemPrice;

@@ -80,6 +80,11 @@ public class MainActivity extends AppCompatActivity
             setFragment(new HomeFragment(), HOME_FRAGMENT);
         }
 
+        if (currentUser == null){
+            navigationView.getMenu().getItem(navigationView.getMenu().size() -1).setEnabled(false);
+        }else {
+            navigationView.getMenu().getItem(navigationView.getMenu().size() -1).setEnabled(true);
+        }
 
         signInDialog = new Dialog(MainActivity.this);
         signInDialog.setContentView(R.layout.sign_in_dialog);
@@ -220,6 +225,7 @@ public class MainActivity extends AppCompatActivity
                 gotoFragment("My Account", new MyAccountFragment(), ACCOUNT_FRAGMENT);
             } else if (id == R.id.nav_sign_out) {
                 FirebaseAuth.getInstance().signOut();
+                DBqueries.clearData();
                 Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
                 startActivity(registerIntent);
                 finish();

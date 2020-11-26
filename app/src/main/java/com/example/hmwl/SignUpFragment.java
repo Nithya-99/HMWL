@@ -27,10 +27,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -214,14 +217,47 @@ public class SignUpFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            CollectionReference userdatareference = firebaseFirestore.collection("USERS").document(firebaseAuth.getUid()).collection("USER_DATA");
 
                             Map<Object,String> userdata = new HashMap<>();
                             userdata.put("Name", name.getText().toString());
 
-                            firebaseFirestore.collection("USERS").add(userdata).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            Map<String,Object> cartMap = new HashMap<>();
+                            cartMap.put("list_size", (long) 0);
+
+                            final List<String> documentNames = new ArrayList<>();
+                            documentNames.add("MY_CART");
+
+                            List<Map<String,Object>> documentFields = new ArrayList<>();
+                            documentFields.add(cartMap);
+
+                            for(int x=0; x< documentNames.size(); x++){
+                                final int finalX = x;
+                                userdatareference.document(documentNames.get(x)).set(documentFields.get(x)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            if(finalX == documentNames.size()-1){
+                                                mainIntent();
+                                            }
+                                        }
+                                        else {
+                                            signupBtn.setEnabled(true);
+                                            signupBtn.setTextColor(Color.rgb(255, 255, 255));
+                                            String error = task.getException().getMessage();
+                                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+
+                            firebaseFirestore.collection("USERS").document(firebaseAuth.getUid()).set(userdata).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
-                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
+                                        Map<Object,Long> listSize = new HashMap<>();
+                                        listSize.put("Name", (long) 0);
+                                        CollectionReference userdatareference = firebaseFirestore.collection("USERS").document(firebaseAuth.getUid()).collection("USER_DATA");
                                         Toast.makeText(getActivity(), "Signup successful", Toast.LENGTH_SHORT).show();
                                         if(disableCloseBtn){
                                             disableCloseBtn = false;
@@ -242,7 +278,6 @@ public class SignUpFragment extends Fragment {
                                 }
                             });
 
-
                         }else{
                             signupBtn.setEnabled(true);
                             signupBtn.setTextColor(Color.rgb(255,255,255));
@@ -258,6 +293,18 @@ public class SignUpFragment extends Fragment {
             }
         }else{
             email.setError("Invalid Email!");
+        }
+    }
+
+    private void mainIntent(){
+
+        if(disableCloseBtn){
+            disableCloseBtn = false;
+        }
+        else {
+            Intent mainIntent = new Intent(getActivity(), MainActivity.class);
+            startActivity(mainIntent);
+            getActivity().finish();
         }
     }
 }

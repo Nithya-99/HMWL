@@ -32,12 +32,17 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.hmwl.RegisterActivity.setSignUpFragment;
 
 public class ProductDetailsActivity extends AppCompatActivity {
 
+    public static boolean running_cart_query = false;
+    public static boolean ALREADY_ADDED_TO_CART = false;
+    public static String productID;
     private ViewPager ProductImagesViewPager;
     private TextView productTitle, productPrice, tvCodIndicator;
     private ImageView codIndicator;
@@ -60,6 +65,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private Dialog signInDialog;
     private FirebaseUser currentUser;
+    private Dialog loadingDialog;
+    private DocumentSnapshot documentSnapshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +91,17 @@ public class ProductDetailsActivity extends AppCompatActivity {
         buyNowBtn = findViewById(R.id.buy_now_btn);
         addToCartBtn = findViewById(R.id.add_to_cart_btn);
 
+//        loadingDialog = new Dialog(ProductDetailsActivity.this);
+//        loadingDialog.setContentView(R.layout.loading_progress_dialog);
+//        loadingDialog.setCancelable(false);
+//        loadingDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.slider_background));
+//        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        loadingDialog.show();
+
         firebaseFirestore = FirebaseFirestore.getInstance();
         List<String> productImages = new ArrayList<>();
-
-        firebaseFirestore.collection("PRODUCTS").document(getIntent().getStringExtra("PRODUCT_ID")).get()
+        productID = getIntent().getStringExtra("PRODUCT_ID");
+        firebaseFirestore.collection("PRODUCTS").document(productID).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -121,6 +135,19 @@ public class ProductDetailsActivity extends AppCompatActivity {
                             }
                             ProductDetailsViewPager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(),
                                     ProductDetailsTabLayout.getTabCount(),productDescription,productSpecificationModelList));
+
+                            if (currentUser != null){
+                                if (DBqueries.cartList.size() == 0){
+                                    DBqueries.loadCartList(ProductDetailsActivity.this, false);
+                                }
+                            }
+
+                            if (DBqueries.cartList.contains(productID)){
+                                ALREADY_ADDED_TO_CART = true;
+                            } else {
+                                ALREADY_ADDED_TO_CART = false;
+                            }
+
                         }else{
                             String error = task.getException().getMessage();
                             Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_LONG).show();
@@ -181,7 +208,43 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 if(currentUser == null){
                     signInDialog.show();
                 }else {
-                    //todo: add to cart
+                    if (!running_cart_query) {
+                        running_cart_query = true;
+                        if (ALREADY_ADDED_TO_CART) {
+                            running_cart_query = false;
+                            Toast.makeText(ProductDetailsActivity.this, "Already added to Cart", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Map<String, Object> addProduct = new HashMap<>();
+                            addProduct.put("product_ID_" + String.valueOf(DBqueries.cartList.size()), productID);
+                            addProduct.put("list_size", (long) DBqueries.cartList.size() + 1);
+
+                            firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_CART")
+                                    .update(addProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+
+                                        if (DBqueries.cartItemModelList.size() != 0) {
+                                            DBqueries.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString()
+                                                    , documentSnapshot.get("product_title").toString()
+                                                    , documentSnapshot.get("product_price").toString()
+                                                    , (Integer) 1));
+                                        }
+
+                                        ALREADY_ADDED_TO_CART = true;
+                                        DBqueries.cartList.add(productID);
+                                        Toast.makeText(ProductDetailsActivity.this, "Product added to cart successfully", Toast.LENGTH_SHORT).show();
+                                        running_cart_query = false;
+                                    }else {
+                                        running_cart_query = false;
+                                        String error = task.getException().getMessage();
+                                        Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+                        }
+                    }
                 }
             }
         });
@@ -222,6 +285,19 @@ public class ProductDetailsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null){
+            if (DBqueries.cartList.size() == 0){
+                DBqueries.loadCartList(ProductDetailsActivity.this, false);
+            }
+        }
+
+        if (DBqueries.cartList.contains(productID)){
+            ALREADY_ADDED_TO_CART = true;
+        } else {
+            ALREADY_ADDED_TO_CART = false;
+        }
+
     }
 
     @Override
