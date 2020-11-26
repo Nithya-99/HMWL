@@ -97,8 +97,8 @@ public class CartAdapter extends RecyclerView.Adapter {
             productPrice = itemView.findViewById(R.id.product_price);
             productQuantity = itemView.findViewById(R.id.product_quantity);
         }
-        private void setItemDetails(String productID, String resource, String title, String productPriceText){
-            Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.placeholder)).into(productImage);
+        private void setItemDetails(String productID,String resource, String title, String productPriceText){
+            Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.border_background)).into(productImage);
             productTitle.setText(title);
             productPrice.setText(productPriceText);
 
