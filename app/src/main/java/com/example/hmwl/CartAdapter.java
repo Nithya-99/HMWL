@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,14 +17,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter {
 
     private List<CartItemModel> cartItemModelList;
+    private TextView cartTotalAmount;
 
-    public CartAdapter(List<CartItemModel> cartItemModelList) {
+    public CartAdapter(List<CartItemModel> cartItemModelList, TextView cartTotalAmount) {
         this.cartItemModelList = cartItemModelList;
+        this.cartTotalAmount = cartTotalAmount;
     }
 
     @Override
@@ -62,14 +67,35 @@ public class CartAdapter extends RecyclerView.Adapter {
                 String title = cartItemModelList.get(position).getProductTitle();
                 String productPriceText = cartItemModelList.get(position).getProductPrice();
 
-                ((CartItemViewholder)viewHolder).setItemDetails(productID ,resource,title,productPriceText);
+                ((CartItemViewholder)viewHolder).setItemDetails(productID ,resource,title,productPriceText,position);
                 break;
             case CartItemModel.TOTAL_AMOUNT:
-                String totalItems = cartItemModelList.get(position).getTotalItems();
-                String totalItemPrice = cartItemModelList.get(position).getTotalItemPrice();
-                String deliveryPrice = cartItemModelList.get(position).getDeliveryPrice();
-                String totalAmount = cartItemModelList.get(position).getTotalAmount();
-                String savedAmount = cartItemModelList.get(position).getSavedAmount();
+                int totalItems = 0;
+                int totalItemPrice = 0;
+                String deliveryPrice;
+                int totalAmount;
+                int savedAmount = 0;
+
+                for (int x=0; x< cartItemModelList.size(); x++){
+
+                    if (cartItemModelList.get(x).getType() == CartItemModel.CART_ITEM){
+                        totalItems++;
+                        totalItemPrice = totalItemPrice + Integer.parseInt(cartItemModelList.get(x).getProductPrice());
+
+                    }
+
+                }
+                if (totalItemPrice > 500){
+                    deliveryPrice = "FREE";
+                    totalAmount = totalItemPrice;
+                }else {
+                    deliveryPrice = "100";
+                    totalAmount = totalItemPrice + 100;
+                }
+
+//                String deliveryPrice = cartItemModelList.get(position).getDeliveryPrice();
+//                String totalAmount = cartItemModelList.get(position).getTotalAmount();
+//                String savedAmount = cartItemModelList.get(position).getSavedAmount();
 
                 ((CartTotalAmountViewholder)viewHolder).setTotalAmount(totalItems, totalItemPrice, deliveryPrice, totalAmount, savedAmount);
                 break;
@@ -90,14 +116,18 @@ public class CartAdapter extends RecyclerView.Adapter {
         private TextView productPrice;
         private TextView productQuantity;
 
+        private LinearLayout deleteBtn;
+
         public CartItemViewholder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.product_image);
             productTitle = itemView.findViewById(R.id.product_title);
             productPrice = itemView.findViewById(R.id.product_price);
             productQuantity = itemView.findViewById(R.id.product_quantity);
+
+            deleteBtn = itemView.findViewById(R.id.remove_item_btn);
         }
-        private void setItemDetails(String productID,String resource, String title, String productPriceText){
+        private void setItemDetails(String productID,String resource, String title, String productPriceText, int position){
             Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.border_background)).into(productImage);
             productTitle.setText(title);
             productPrice.setText(productPriceText);
@@ -129,6 +159,18 @@ public class CartAdapter extends RecyclerView.Adapter {
                     quantityDialog.show();
                 }
             });
+
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!ProductDetailsActivity.running_cart_query){
+                        ProductDetailsActivity.running_cart_query = true;
+
+                        DBqueries.removeFromCart(position,itemView.getContext());
+                    }
+                }
+            });
+
         }
     }
 
@@ -149,12 +191,31 @@ public class CartAdapter extends RecyclerView.Adapter {
             totalAmount = itemView.findViewById(R.id.total_price);
             savedAmount = itemView.findViewById(R.id.saved_amount);
         }
-        private void setTotalAmount(String totalItemText,String totalItemPriceText, String deliveryPriceText, String totalAmountText, String savedAmountText){
-            totalItems.setText(totalItemText);
-            totalItemPrice.setText(totalItemPriceText);
-            deliveryPrice.setText(deliveryPriceText);
-            totalAmount.setText(totalAmountText);
-            savedAmount.setText(savedAmountText);
+        private void setTotalAmount(int totalItemText,int totalItemPriceText, String deliveryPriceText, int totalAmountText, int savedAmountText){
+            totalItems.setText("Price("+totalItemText+"items");
+            totalItemPrice.setText("Rs."+totalItemPriceText+"/-");
+            if (deliveryPriceText.equals("FREE")){
+                deliveryPrice.setText(deliveryPriceText);
+            }
+            else{
+                deliveryPrice.setText("Rs."+deliveryPriceText+"/-");
+            }
+            totalAmount.setText("Rs."+totalAmountText+"/-");
+            totalAmount.setText("Rs."+totalAmountText+"/-");
+            cartTotalAmount.setText("Rs."+totalAmountText+"/-");
+            savedAmount.setText("you saved Rs."+savedAmountText+"/- on this product");
+//            LinearLayout parent = (LinearLayout) cartTotalAmount.getParent().getParent();
+//
+//            if (totalItemPriceText == 0){
+//                DBqueries.cartItemModelList.remove(DBqueries.cartItemModelList.size()-1);
+//                parent.setVisibility(View.GONE);
+//            }
+//            else{
+//                parent.setVisibility(View.VISIBLE);
+//            }
+//            deliveryPrice.setText(deliveryPriceText);
+//            totalAmount.setText(totalAmountText);
+//            savedAmount.setText(savedAmountText);
         }
     }
 }
