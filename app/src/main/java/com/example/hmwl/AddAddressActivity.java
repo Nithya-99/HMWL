@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,11 @@ public class AddAddressActivity extends AppCompatActivity {
 
     private Button saveBtn;
     private EditText city, locality, flatNo, pincode, landmark, name, mobileNo, alternateMobileNo;
-    private EditText state;
+    private Spinner stateSpinner;
     private Dialog loadingDialog;
+
+    private String [] stateList;
+    private String selectedState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,38 +55,112 @@ public class AddAddressActivity extends AppCompatActivity {
         name = findViewById(R.id.name);
         mobileNo = findViewById(R.id.mobile_no);
         alternateMobileNo = findViewById(R.id.alternate_mobile_no);
-        state = findViewById(R.id.state_spinner);
+        stateSpinner = findViewById(R.id.state_spinner);
 
-//        loadingDialog = new Dialog(this);
-//        loadingDialog.setContentView(R.layout.loading_progress_dialog);
-//        loadingDialog.setCancelable(false);
-//        loadingDialog.getWindow().setBackgroundDrawable(this.getDrawable(R.drawable.slider_background));
-//        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        stateList = getResources().getStringArray(R.array.india_states);
 
-//        ArrayAdapter spinnerAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,stateList);
-//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        stateSpinner.setAdapter(spinnerAdapter);
+        loadingDialog = new Dialog(this);
+        loadingDialog.setContentView(R.layout.loading_progress_dialog);
+        loadingDialog.setCancelable(false);
+        loadingDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.slider_background));
+        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+
+        ArrayAdapter spinnerAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,stateList);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        stateSpinner.setAdapter(spinnerAdapter);
 //
-//        stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                selectedState = stateList[position];
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
+        stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedState = stateList[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent deliveryIntent = new Intent(AddAddressActivity.this, DeliveryActivity.class);
-                startActivity(deliveryIntent);
-                finish();
+                if(!TextUtils.isEmpty(city.getText())){
+                    if(!TextUtils.isEmpty(locality.getText())){
+                        if(!TextUtils.isEmpty(flatNo.getText())){
+                            if(!TextUtils.isEmpty(pincode.getText()) && pincode.getText().length() == 6){
+                                if(!TextUtils.isEmpty(name.getText())){
+                                    if(!TextUtils.isEmpty(mobileNo.getText()) && mobileNo.getText().length()==10){
+
+                                        loadingDialog.show();
+
+                                        String fullAddress = city.getText().toString()+locality.getText().toString()+flatNo.getText().toString()+landmark.getText().toString();
+
+                                        Map<String, Object> addAddress = new HashMap();
+                                        addAddress.put("list_size", (long)DBqueries.addressesModelList.size()+1);
+                                        addAddress.put("fullname_"+String.valueOf((long)DBqueries.addressesModelList.size()+1), name.getText().toString() + " - " + mobileNo.getText().toString());
+                                        addAddress.put("address_"+String.valueOf((long)DBqueries.addressesModelList.size()+1), fullAddress);
+                                        addAddress.put("pincode_"+String.valueOf((long)DBqueries.addressesModelList.size()+1), pincode.getText().toString());
+                                        addAddress.put("selected_"+String.valueOf((long)DBqueries.addressesModelList.size()+1), true);
+                                        if(DBqueries.addressesModelList.size() > 0){
+                                            addAddress.put("selected_" +(DBqueries.selectedAddress+1), false);
+                                        }
+
+
+                                        FirebaseFirestore.getInstance().collection("USERS")
+                                                .document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA")
+                                                .document("MY_ADDRESSES")
+                                                .update(addAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+
+                                                    if(DBqueries.addressesModelList.size() > 0)
+                                                    {
+                                                        DBqueries.addressesModelList.get(DBqueries.selectedAddress).setSelected(false);
+                                                    }
+                                                    DBqueries.addressesModelList.add(new AddressesModel(name.getText().toString() + " - " + mobileNo.getText().toString(), fullAddress, pincode.getText().toString(), true));
+
+                                                    Intent deliveryIntent = new Intent(AddAddressActivity.this, DeliveryActivity.class);
+                                                    startActivity(deliveryIntent);
+                                                    finish();
+                                                } else{
+                                                    String error = task.getException().getMessage();
+                                                    Toast.makeText(AddAddressActivity.this, error, Toast.LENGTH_SHORT).show();
+                                                }
+                                                loadingDialog.dismiss();
+                                            }
+                                        });
+
+                                    }
+                                    else{
+                                        mobileNo.setSelected(true);
+                                        Toast.makeText(AddAddressActivity.this, "Please provide valid Mobile number", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                                else{
+                                    name.setSelected(true);
+                                }
+                            }
+                            else{
+                                pincode.setSelected(true);
+                                Toast.makeText(AddAddressActivity.this, "Please provide valid pincode", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else{
+                            flatNo.setSelected(true);
+                        }
+                    }
+                    else{
+                        locality.setSelected(true);
+                    }
+                }
+                else{
+                    city.setSelected(true);
+                }
+
 //                loadingDialog.show();
 
 //                Map<String, Object> addAddress = new HashMap();

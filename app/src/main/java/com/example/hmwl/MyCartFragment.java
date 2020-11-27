@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class MyCartFragment extends Fragment {
     }
 
     private RecyclerView cartItemsRecyclerView;
-//    private Dialog loadingDialog;
+    private Dialog loadingDialog;
     public static CartAdapter cartAdapter;
     private Button continueBtn;
     private TextView totalAmount;
@@ -35,12 +36,12 @@ public class MyCartFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_cart, container, false);
 
         ////loading dialog
-//        loadingDialog = new Dialog(getContext());
-//        loadingDialog.setContentView(R.layout.loading_progress_dialog);
-//        loadingDialog.setCancelable(false);
-//        loadingDialog.getWindow().setBackgroundDrawable(getContext().getDrawable(R.drawable.slider_background));
-//        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        loadingDialog.show();
+        loadingDialog = new Dialog(getContext());
+        loadingDialog.setContentView(R.layout.loading_progress_dialog);
+        loadingDialog.setCancelable(false);
+        loadingDialog.getWindow().setBackgroundDrawable(getContext().getDrawable(R.drawable.slider_background));
+        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        loadingDialog.show();
         ////loading dialog
 
         cartItemsRecyclerView = view.findViewById(R.id.cart_items_recyclerview);
@@ -55,7 +56,14 @@ public class MyCartFragment extends Fragment {
             DBqueries.cartList.clear();
             DBqueries.loadCartList(getContext(),true);
         }
-
+        else{
+//            if (DBqueries.cartItemModelList.get(DBqueries.cartItemModelList.size()-1).getType() == CartItemModel.TOTAL_AMOUNT){
+//                LinearLayout parent = (LinearLayout) totalAmount.getParent().getParent();
+//                parent.setVisibility(View.VISIBLE);
+//            }
+            //loadingDialog.dismiss();
+        }
+        loadingDialog.dismiss();
 //        List<CartItemModel> cartItemModelList = new ArrayList<>();
 //        cartItemModelList.add(new CartItemModel(1,"Price (3 Items)", "Rs.2500/-","Free","You saved Rs.501/- in this order","2500/-"));
 
@@ -66,8 +74,8 @@ public class MyCartFragment extends Fragment {
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent deliveryIntent = new Intent(getContext(), AddAddressActivity.class);
-                getContext().startActivity(deliveryIntent);
+                loadingDialog.show();
+                DBqueries.loadAddresses(getContext(), loadingDialog);
             }
         });
         return view;
