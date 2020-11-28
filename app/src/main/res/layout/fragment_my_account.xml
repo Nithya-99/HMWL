@@ -7,51 +7,33 @@
     tools:context=".MyAccountFragment"
     android:background="@drawable/background">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout5"
+            android:id="@+id/layout_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical">
 
             <include layout="@layout/profile_data_layout" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/sign_out_btn"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:backgroundTint="@color/green"
-            android:text="Sign Out"
-            android:textAllCaps="false"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/sign_out_btn"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
-            tools:layout_editor_absoluteX="228dp"
-            android:gravity="bottom"
-            android:layout_marginBottom="20dp">
             <include layout="@layout/my_addresses_layout" />
+            <Button
+                android:id="@+id/sign_out_btn"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:backgroundTint="@color/green"
+                android:text="Sign Out"
+                android:textAllCaps="false"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold"
+
+                />
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
 
 </FrameLayout>

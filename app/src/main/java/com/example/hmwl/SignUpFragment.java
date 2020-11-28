@@ -221,6 +221,8 @@ public class SignUpFragment extends Fragment {
 
                             Map<Object,String> userdata = new HashMap<>();
                             userdata.put("Name", name.getText().toString());
+                            userdata.put("email",email.getText().toString());
+                            userdata.put("profile","");
 
                             Map<String,Object> cartMap = new HashMap<>();
                             cartMap.put("list_size", (long) 0);

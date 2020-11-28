@@ -75,7 +75,7 @@ public class MyCartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 loadingDialog.show();
-                DBqueries.loadAddresses(getContext(), loadingDialog);
+                DBqueries.loadAddresses(getContext(), loadingDialog,true);
             }
         });
         return view;

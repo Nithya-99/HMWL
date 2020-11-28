@@ -1,14 +1,19 @@
 package com.example.hmwl;
 
+import android.widget.EditText;
+import android.widget.Spinner;
+
 public class AddressesModel {
 
     private String fullname;
-//    private String mobileNo;
+    private String mobileNo;
     private String address;
     private String pincode;
     private Boolean selected;
 
-    public AddressesModel(String fullname, String address, String pincode, Boolean selected) {
+
+
+        public AddressesModel(String fullname, String address, String pincode, Boolean selected) {
         this.fullname = fullname;
 //        this.mobileNo = mobileNo;
         this.address = address;
@@ -16,13 +21,13 @@ public class AddressesModel {
         this.selected = selected;
     }
 
-//    public String getMobileNo() {
-//        return mobileNo;
-//    }
-//
-//    public void setMobileNo(String mobileNo) {
-//        this.mobileNo = mobileNo;
-//    }
+    public String getMobileNo() {
+        return mobileNo;
+    }
+
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
+    }
 
 
     public Boolean getSelected() {

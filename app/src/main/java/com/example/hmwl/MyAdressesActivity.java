@@ -40,6 +40,7 @@ public class MyAdressesActivity extends AppCompatActivity {
     private Button deliverHereBtn;
     private static AddressesAdapter addressesAdapter;
     private Dialog loadingDialog;
+    private int mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class MyAdressesActivity extends AppCompatActivity {
         myAddressesRecyclerView.setLayoutManager(layoutManager);
 
 
-        int mode = getIntent().getIntExtra("MODE", -1);
+        mode = getIntent().getIntExtra("MODE", -1);
         if(mode == SELECT_ADDRESS){
             deliverHereBtn.setVisibility(View.VISIBLE);
         } else{

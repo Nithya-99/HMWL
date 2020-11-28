@@ -27,6 +27,7 @@ public class DBqueries {
 //    public static FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
     public static FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    public static String email,fullname,profile;
     public static List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();
 
     //public static List<HomePageModel> homePageModelList = new ArrayList<>();
@@ -195,7 +196,7 @@ public class DBqueries {
     }
 
 
-    public static void loadAddresses(final Context context, Dialog loadingDialog){
+    public static void loadAddresses(final Context context, Dialog loadingDialog, boolean gotoDeliveryActivity){
 
         addressesModelList.clear();
         firebaseFirestore.collection("USERS")
@@ -206,7 +207,7 @@ public class DBqueries {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
-                    Intent deliveryIntent;
+                    Intent deliveryIntent= null;;
                     if((long) task.getResult().get("list_size") == 0) {
                         deliveryIntent = new Intent(context, AddAddressActivity.class);
                         deliveryIntent.putExtra("INTENT", "deliveryIntent");
@@ -222,9 +223,13 @@ public class DBqueries {
                                 selectedAddress = Integer.parseInt(String.valueOf(x-1));
                             }
                         }
-                        deliveryIntent = new Intent(context, DeliveryActivity.class);
+                        if(gotoDeliveryActivity){
+                            deliveryIntent = new Intent(context, DeliveryActivity.class);
+                        }
                     }
-                    context.startActivity(deliveryIntent);
+                    if(gotoDeliveryActivity){
+                        context.startActivity(deliveryIntent);
+                    }
                 } else{
                     String error = task.getException().getMessage();
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show();

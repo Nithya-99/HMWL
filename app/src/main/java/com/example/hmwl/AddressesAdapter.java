@@ -22,7 +22,8 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
 
     private List<AddressesModel> addressesModelList;
     private int MODE;
-    private int preSelectedPosition ;
+    private int preSelectedPosition;
+    private boolean refresh = false;
 
     public AddressesAdapter(List<AddressesModel> addressesModelList,int MODE) {
         this.addressesModelList = addressesModelList;
@@ -117,7 +118,11 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
                     @Override
                     public void onClick(View v) {
                         optionContainer.setVisibility(View.VISIBLE);
-                        refreshItem(preSelectedPosition,preSelectedPosition);
+                        if(refresh){
+                            refreshItem(preSelectedPosition,preSelectedPosition);
+                        }else {
+                            refresh = true;
+                        }
                         preSelectedPosition = position;
                     }
                 });
