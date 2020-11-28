@@ -23,7 +23,7 @@
         android:elevation="3dp"
         app:layout_constraintBottom_toTopOf="@+id/main_name"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/user" />
+        android:src="@drawable/user1" />
 
     <TextView
         android:id="@+id/main_name"
