@@ -70,9 +70,9 @@ public class DeliveryActivity extends AppCompatActivity {
         totalAmount = findViewById(R.id.total_cart_amount);
         changeOrAddNewAddressBtn = findViewById(R.id.change_or_add_Address_btn);
 
-//        fullname = findViewById(R.id.fullname);
-//        fullAddress = findViewById(R.id.address);
-//        pincode = findViewById(R.id.pincode);
+        fullname = findViewById(R.id.fullname);
+        fullAddress = findViewById(R.id.address);
+        pincode = findViewById(R.id.pincode);
 //        continueBtn = findViewById(R.id.cart_continue_btn);
 
 //        loadingDialog = new Dialog(DeliveryActivity.this);
@@ -95,10 +95,7 @@ public class DeliveryActivity extends AppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         deliveryRecyclerView.setLayoutManager(layoutManager);
 
-        List<CartItemModel> cartItemModelList = new ArrayList<>();
-//        cartItemModelList.add(new CartItemModel(1,"Price (3 Items)", "Rs.2500/-","Free","You saved Rs.501/- in this order"));
-
-        CartAdapter cartAdapter = new CartAdapter(cartItemModelList, totalAmount);
+        CartAdapter cartAdapter = new CartAdapter(DBqueries.cartItemModelList, totalAmount, false);
         deliveryRecyclerView.setAdapter(cartAdapter);
         cartAdapter.notifyDataSetChanged();
 
@@ -112,6 +109,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 startActivity(myAddressesIntent);
             }
         });
+
 
 //        continueBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -273,16 +271,14 @@ public class DeliveryActivity extends AppCompatActivity {
 //        });
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        name = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname();
-//        mobileNo = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getMobileNo();
-//        fullname.setText(name);
-//        fullAddress.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
-//        pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        fullname.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
+        fullAddress.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
+        pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
+    }
+
 
 
     @Override

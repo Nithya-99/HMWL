@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity
     private Dialog signInDialog;
     public static Boolean showCart = false;
     private FirebaseUser currentUser;
+    private int scrollFlags;
+    private AppBarLayout.LayoutParams params;
 
     @SuppressLint("WrongConstant")
     @Override
@@ -58,7 +61,8 @@ public class MainActivity extends AppCompatActivity
         actionBarLogo = findViewById(R.id.actionbar_logo);
         setSupportActionBar(toolbar);
 
-
+        params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        scrollFlags = params.getScrollFlags();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -248,10 +252,10 @@ public class MainActivity extends AppCompatActivity
         setFragment(fragment, fragmentNo);
         if (fragmentNo == CART_FRAGMENT){
             navigationView.getMenu().getItem(3).setChecked(true);
+            params.setScrollFlags(0);
+        } else{
+            params.setScrollFlags(scrollFlags);
         }
-        // delh abhi yaha pr humne neeche 3 kyu pass kiya na
-        // coz jab app ke left me navbar open karega tab tujhe jo options dekhenge usme se 3 rd wala option my cart ka h
-        // and user ko ye bhata rhe h apan ki agar usne 3rd wala option select kiya to ye sab hoga.....
 
     }
 
