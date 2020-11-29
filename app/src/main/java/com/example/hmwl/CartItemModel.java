@@ -22,14 +22,24 @@ public class CartItemModel {
     private String productTitle;
     private String productPrice;
     private int productQuantity;
+    private Long maxQuantity;
 
-    public CartItemModel(int type, String productID,String productImage, String productTitle, String productPrice, int productQuantity) {
+    public CartItemModel(int type, String productID,String productImage, String productTitle, String productPrice, int productQuantity, Long maxQuantity) {
         this.type = type;
         this.productID = productID;
         this.productImage = productImage;
         this.productTitle = productTitle;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
+        this.maxQuantity = maxQuantity;
+    }
+
+    public Long getMaxQuantity() {
+        return maxQuantity;
+    }
+
+    public void setMaxQuantity(Long maxQuantity) {
+        this.maxQuantity = maxQuantity;
     }
 
     public String getProductID() {

@@ -292,8 +292,8 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setTitle(title);
         invalidateOptionsMenu();
         setFragment(fragment, fragmentNo);
-        if (fragmentNo == CART_FRAGMENT){
-            navigationView.getMenu().getItem(3).setChecked(true);
+        if (fragmentNo == CART_FRAGMENT || showCart){
+            navigationView.getMenu().getItem(2).setChecked(true);
             params.setScrollFlags(0);
         } else{
             params.setScrollFlags(scrollFlags);

@@ -128,7 +128,8 @@ public class DBqueries {
                                                 , task.getResult().get("product_image_1").toString()
                                                 , task.getResult().get("product_title").toString()
                                                 , task.getResult().get("product_price").toString()
-                                                , (Integer) 0));
+                                                , (Integer) 0
+                                                , (long) task.getResult().get("max-quantity")));
 
                                         if (cartList.size() == 1){
                                             cartItemModelList.add(new CartItemModel(CartItemModel.TOTAL_AMOUNT));

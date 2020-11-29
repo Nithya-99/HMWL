@@ -196,6 +196,23 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 if(currentUser == null){
                     signInDialog.show();
                 }else{
+//                    DeliveryActivity.cartItemModelList = new ArrayList<>();
+//                    DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, documentSnapshot.get("product_image_1").toString()
+//                            , documentSnapshot.get("product_title").toString()
+//                            , documentSnapshot.get("product_price").toString()
+//                            , (Integer) 1
+//                            ,(long) documentSnapshot.get("max-quantity")));
+
+//                    DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.TOTAL_AMOUNT));
+
+//                    if (DBqueries.addressesModelList.size() == 0) {
+//                        DBqueries.loadAddresses(ProductDetailsActivity.this,loadingDialog,);
+//                    }
+//                    else{
+//                        Intent deliveryIntent = new Intent(ProductDetailsActivity.this, DeliveryActivity.class);
+//                        startActivity(deliveryIntent);
+//                    }
+
                     Intent deliveryIntent = new Intent(ProductDetailsActivity.this, DeliveryActivity.class);
                     startActivity(deliveryIntent);
                 }
@@ -228,7 +245,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                             DBqueries.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString()
                                                     , documentSnapshot.get("product_title").toString()
                                                     , documentSnapshot.get("product_price").toString()
-                                                    , (Integer) 1));
+                                                    , (Integer) 1
+                                                    ,(long) documentSnapshot.get("max-quantity")));
                                         }
 
                                         ALREADY_ADDED_TO_CART = true;
