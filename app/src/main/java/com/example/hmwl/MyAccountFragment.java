@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -25,6 +26,7 @@ public class MyAccountFragment extends Fragment {
     public MyAccountFragment() {
         // Required empty public constructor
     }
+    private FloatingActionButton settingsBtn;
     private Button viewAllAddressBtn,signoutBtn;
     public static final int MANAGE_ADDRESS =1;
     private CircleImageView profileView;
@@ -46,6 +48,7 @@ public class MyAccountFragment extends Fragment {
         address = view.findViewById(R.id.address);
         pincode = view.findViewById(R.id.address_pincode);
         signoutBtn = view.findViewById(R.id.sign_out_btn);
+        settingsBtn = view.findViewById(R.id.settings_btn);
 
 //        loadingDialog = new Dialog(getContext());
 //        loadingDialog.setContentView(R.layout.loading_progress_dialog);
@@ -120,6 +123,16 @@ public class MyAccountFragment extends Fragment {
             }
         });
 
+        settingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent updateUserInfo = new Intent(getContext(),UpdateUserInfoActivity.class);
+                updateUserInfo.putExtra("Name", name.getText());
+                updateUserInfo.putExtra("Email", email.getText());
+                updateUserInfo.putExtra("Photo", DBqueries.profile);
+                startActivity(updateUserInfo);
+            }
+        });
         return view;
     }
 }

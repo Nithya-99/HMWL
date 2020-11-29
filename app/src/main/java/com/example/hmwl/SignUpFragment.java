@@ -100,6 +100,7 @@ public class SignUpFragment extends Fragment {
                 getActivity().finish();
             }
         });
+
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -168,7 +169,6 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,6 +181,7 @@ public class SignUpFragment extends Fragment {
         fragmentTransaction.replace(parentFramelayout.getId(),fragment);
         fragmentTransaction.commit();
     }
+
     private void checkInputs(){
         if(!TextUtils.isEmpty(email.getText())){
             if(!TextUtils.isEmpty((name.getText()))){
