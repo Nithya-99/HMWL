@@ -158,10 +158,26 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
     protected void onStart() {
         super.onStart();
 
-        name = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname();
+        name = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getName();
         mobileNo = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getMobileNo();
-        fullname.setText(name);
-        fullAddress.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
+        fullname.setText(name + " - " + mobileNo);
+//        if(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAlternateMobileNo().equals("")){
+//            fullname.setText(name + " - " + mobileNo);
+//        }
+//        else{
+//            fullname.setText(name + " - " + mobileNo + " or " + DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAlternateMobileNo());
+//        }
+        String flatNo = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFlatNo();
+        String locality = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getLocality();
+        String landmark = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getLandmark();
+        String city = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getCity();
+        String state = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getState();
+
+        if(landmark.equals("")){
+            fullAddress.setText(flatNo +" "+ locality +" " + city +" " + state);
+        } else{
+            fullAddress.setText(flatNo +" "+ locality +" " + landmark +" " + city +" " + state);
+        }
         pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
     }
 

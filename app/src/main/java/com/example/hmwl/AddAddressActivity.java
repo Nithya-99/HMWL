@@ -35,6 +35,9 @@ public class AddAddressActivity extends AppCompatActivity {
 
     private String [] stateList;
     private String selectedState;
+    private boolean updateAddress = false;
+    private AddressesModel addressesModel;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,28 @@ public class AddAddressActivity extends AppCompatActivity {
             }
         });
 
+        if(getIntent().getStringExtra("INTENT").equals("update_address")){
+            updateAddress = true;
+            position = getIntent().getIntExtra("index", -1);
+            addressesModel = DBqueries.addressesModelList.get(position);
+            city.setText(addressesModel.getCity());
+            locality.setText(addressesModel.getLocality());
+            flatNo.setText(addressesModel.getFlatNo());
+            landmark.setText(addressesModel.getLandmark());
+            name.setText(addressesModel.getName());
+            mobileNo.setText(addressesModel.getMobileNo());
+            alternateMobileNo.setText(addressesModel.getAlternateMobileNo());
+            pincode.setText(addressesModel.getPincode());
+
+            for(int i = 0; i<stateList.length; i++){
+                if(stateList[i].equals(addressesModel.getState())){
+                    stateSpinner.setSelection(i);
+                }
+            }
+            saveBtn.setText("Update");
+        } else{
+            position = DBqueries.addressesModelList.size();
+        }
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,23 +121,33 @@ public class AddAddressActivity extends AppCompatActivity {
 
                                         loadingDialog.show();
 
-                                        String fullAddress = flatNo.getText().toString() + "  " + locality.getText().toString() + "  " + landmark.getText().toString() + "  " +  city.getText().toString() + "  " + selectedState;
-
                                         Map<String, Object> addAddress = new HashMap();
-                                        addAddress.put("list_size", (long)DBqueries.addressesModelList.size()+1);
-                                        if(TextUtils.isEmpty(alternateMobileNo.getText())){
-                                            addAddress.put("fullname_"+String.valueOf((long)DBqueries.addressesModelList.size()+1), name.getText().toString() + " - " + mobileNo.getText().toString());
-                                        }
-                                        else {
-                                            addAddress.put("fullname_"+String.valueOf((long)DBqueries.addressesModelList.size()+1), name.getText().toString() + " - " + mobileNo.getText().toString()+" or " + alternateMobileNo.getText().toString());
-                                        }
-                                        addAddress.put("address_"+String.valueOf((long)DBqueries.addressesModelList.size()+1), fullAddress);
-                                        addAddress.put("pincode_"+String.valueOf((long)DBqueries.addressesModelList.size()+1), pincode.getText().toString());
-                                        addAddress.put("selected_"+String.valueOf((long)DBqueries.addressesModelList.size()+1), true);
-                                        if(DBqueries.addressesModelList.size() > 0){
-                                            addAddress.put("selected_" +(DBqueries.selectedAddress+1), false);
-                                        }
+                                        addAddress.put("city_"+String.valueOf(position+1), city.getText().toString());
+                                        addAddress.put("locality_"+String.valueOf(position+1), locality.getText().toString());
+                                        addAddress.put("flat_no_"+String.valueOf(position+1), flatNo.getText().toString());
+                                        addAddress.put("pincode_"+String.valueOf(position+1), pincode.getText().toString());
+                                        addAddress.put("landmark_"+String.valueOf(position+1), landmark.getText().toString());
+                                        addAddress.put("name_"+String.valueOf(position+1),name.getText().toString());
+                                        addAddress.put("mobile_no_"+String.valueOf(position+1),mobileNo.getText().toString());
+                                        addAddress.put("alternate_mobile_no"+String.valueOf(position+1), alternateMobileNo.getText().toString());
+                                        addAddress.put("state_"+String.valueOf(position+1), selectedState);
 
+                                        if(!updateAddress){
+                                            addAddress.put("list_size", (long)DBqueries.addressesModelList.size()+1);
+                                            if(getIntent().getStringExtra("INTENT").equals("manage")){
+                                                if(DBqueries.addressesModelList.size() == 0){
+                                                    addAddress.put("selected_"+String.valueOf(position+1), true);
+                                                } else{
+                                                    addAddress.put("selected_"+String.valueOf(position+1), false);
+                                                }
+                                            } else{
+                                                addAddress.put("selected_"+String.valueOf(position+1), true);
+                                            }
+
+                                            if(DBqueries.addressesModelList.size() > 0){
+                                                addAddress.put("selected_" +(DBqueries.selectedAddress+1), false);
+                                            }
+                                        }
 
                                         FirebaseFirestore.getInstance().collection("USERS")
                                                 .document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA")
@@ -122,13 +157,22 @@ public class AddAddressActivity extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if(task.isSuccessful()) {
 
-                                                    if (DBqueries.addressesModelList.size() > 0) {
-                                                        DBqueries.addressesModelList.get(DBqueries.selectedAddress).setSelected(false);
-                                                    }
-                                                    if (TextUtils.isEmpty(alternateMobileNo.getText())) {
-                                                        DBqueries.addressesModelList.add(new AddressesModel(name.getText().toString() + " - " + mobileNo.getText().toString() + " ", fullAddress, pincode.getText().toString(), true));
-                                                    } else {
-                                                        DBqueries.addressesModelList.add(new AddressesModel(name.getText().toString() + " - " + mobileNo.getText().toString() + " or " + alternateMobileNo.getText().toString() + " ", fullAddress, pincode.getText().toString(), true));
+                                                    if(!updateAddress) {
+                                                        if (DBqueries.addressesModelList.size() > 0) {
+                                                            DBqueries.addressesModelList.get(DBqueries.selectedAddress).setSelected(false);
+                                                        }
+                                                        DBqueries.addressesModelList.add(new AddressesModel(true, city.getText().toString(), locality.getText().toString(), flatNo.getText().toString(), pincode.getText().toString(), landmark.getText().toString(),name.getText().toString(), mobileNo.getText().toString(), alternateMobileNo.getText().toString(), selectedState));
+
+                                                        if(getIntent().getStringExtra("INTENT").equals("manage")){
+                                                            if(DBqueries.addressesModelList.size() == 0){
+                                                                DBqueries.selectedAddress = DBqueries.addressesModelList.size() - 1;
+                                                            }
+                                                        } else{
+                                                            DBqueries.selectedAddress = DBqueries.addressesModelList.size() - 1;
+                                                        }
+
+                                                    } else{
+                                                        DBqueries.addressesModelList.set(position, new AddressesModel(true, city.getText().toString(), locality.getText().toString(), flatNo.getText().toString(), pincode.getText().toString(), landmark.getText().toString(),name.getText().toString(), mobileNo.getText().toString(), alternateMobileNo.getText().toString(), selectedState));
                                                     }
 
                                                     if (getIntent().getStringExtra("INTENT").equals("deliveryIntent")) {
@@ -137,7 +181,6 @@ public class AddAddressActivity extends AppCompatActivity {
                                                 } else{
                                                         MyAdressesActivity.refreshItem(DBqueries.selectedAddress, DBqueries.addressesModelList.size()-1);
                                                     }
-                                                    DBqueries.selectedAddress = DBqueries.addressesModelList.size() - 1;
                                                     finish();
                                                 } else{
                                                     String error = task.getException().getMessage();
@@ -211,17 +254,6 @@ public class AddAddressActivity extends AppCompatActivity {
 //                                    }
 //                                    DBqueries.selectedAddress = DBqueries.addressesModelList.size() - 1;
 //
-//                                    // ye if statement upar ka isliye dala h kyuki apan ko baar baar ye error aa rha tha
-//                                    // error aisa tha ki
-//                                    // say abhi user ne ek hi address add kiya h but then jab usne 2 ya zyada address add kiya and then wo agar back arrow press krke back gaya
-//                                    // to usko ek ek krke apni purani screens dikhegi matlab
-//
-//                                    //eg:- aisa le le ki facebook me tune 5 page bharkr content likha login krne ke liye say
-//                                    //and ab tu login ho gaya h and abhi tujhe wo pages nhi dikhne chhaiye cox tu login ho gya h
-//                                    //but tune abhi jab back arrow press kiya to tujhe wo sare pages ke through jana padega aisa error abhi aa rha tha
-//
-//                                    //so isko solve krne ke liye humne kya kiya na ki intent ko jo naam h agar uss time pr screen change hote time intent ka jo naam h
-//                                    //wo deliveryIntent aisa hua to hum sab kuchhh normal karenge warna finish kr denge
 //                                    finish();
 //
 //                                }

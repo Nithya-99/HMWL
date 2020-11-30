@@ -216,10 +216,16 @@ public class DBqueries {
                     else{
 
                         for(long x = 1; x < (long)task.getResult().get("list_size") + 1; x++){
-                            addressesModelList.add(new AddressesModel(task.getResult().get("fullname_"+x).toString(),
-                                    task.getResult().get("address_"+x).toString(),
-                                    task.getResult().get("pincode_"+x).toString(),
-                                    (boolean)task.getResult().get("selected_"+x)));
+                            addressesModelList.add(new AddressesModel(task.getResult().getBoolean("selected_"+x)
+                                    ,task.getResult().getString("city_"+x)
+                                    ,task.getResult().getString("locality_"+x)
+                                    ,task.getResult().getString("flat_no_"+x)
+                                    ,task.getResult().getString("pincode_"+x)
+                                    ,task.getResult().getString("landmark_"+x)
+                                    ,task.getResult().getString("name_"+x)
+                                    ,task.getResult().getString("mobile_no_"+x)
+                                    ,task.getResult().getString("alternate_mobile_no_"+x)
+                                    ,task.getResult().getString("state_"+x)));
                             if((boolean)task.getResult().get("selected_"+x)){
                                 selectedAddress = Integer.parseInt(String.valueOf(x-1));
                             }

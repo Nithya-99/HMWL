@@ -50,11 +50,11 @@ public class MyAccountFragment extends Fragment {
         signoutBtn = view.findViewById(R.id.sign_out_btn);
         settingsBtn = view.findViewById(R.id.settings_btn);
 
-//        loadingDialog = new Dialog(getContext());
-//        loadingDialog.setContentView(R.layout.loading_progress_dialog);
-//        loadingDialog.setCancelable(false);
-//        loadingDialog.getWindow().setBackgroundDrawable(getContext().getDrawable(R.drawable.slider_background));
-//        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        loadingDialog = new Dialog(getContext());
+        loadingDialog.setContentView(R.layout.loading_progress_dialog);
+        loadingDialog.setCancelable(false);
+        loadingDialog.getWindow().setBackgroundDrawable(getContext().getDrawable(R.drawable.slider_background));
+        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        loadingDialog.show();
 
         layoutContainer = view.findViewById(R.id.layout_container);
@@ -69,38 +69,34 @@ public class MyAccountFragment extends Fragment {
             address.setText("-");
             pincode.setText("-");
         }else {
-            String nameText,mobileNo;
-            nameText = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname();
-            //mobileNo = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getMobileNo();
-            //addressname.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
-            address.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
-            pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
+//            String nameText,mobileNo;
+//            nameText = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getName();
+//            //mobileNo = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getMobileNo();
+//            //addressname.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
+//            //address.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
+//            pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
         }
-//        loadingDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialogInterface) {
-//                loadingDialog.setOnDismissListener(null);
-//                loadingDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                    @Override
-//                    public void onDismiss(DialogInterface dialogInterface) {
-//                        loadingDialog.setOnDismissListener(null);
-//                        if(DBqueries.addressesModelList.size()==0){
-//                            addressname.setText("No Address");
-//                            address.setText("-");
-//                            pincode.setText("-");
-//                        }else {
-//                            String nameText,mobileNo;
-//                            nameText = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname();
-//                            //mobileNo = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getMobileNo();
-//                            //addressname.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
-//                            address.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
-//                            pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
-//                        }
-//                    }
-//                });
-//                DBqueries.loadAddresses(getContext(),loadingDialog,false);
-//            }
-//        });
+                //loadingDialog.show();
+         loadingDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                loadingDialog.setOnDismissListener(null);
+                loadingDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        loadingDialog.setOnDismissListener(null);
+                        if (DBqueries.addressesModelList.size() == 0) {
+                            addressname.setText("No Address");
+                            address.setText("-");
+                            pincode.setText("-");
+                        } else {
+                            setAddress();
+                        }
+                    }
+                });
+                DBqueries.loadAddresses(getContext(),loadingDialog,false);
+            }
+        });
 
         viewAllAddressBtn = view.findViewById(R.id.view_all_addresses_btn);
         viewAllAddressBtn.setOnClickListener(new View.OnClickListener() {
@@ -134,5 +130,44 @@ public class MyAccountFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //if(loadingDialog.isShowing()){
+            if (DBqueries.addressesModelList.size() == 0) {
+                addressname.setText("No Address");
+                address.setText("-");
+                pincode.setText("-");
+            } else {
+                setAddress();
+            }
+    }
+
+    private void setAddress() {
+        String nametext,mobileNo;
+        nametext = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getName();
+        mobileNo = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getMobileNo();
+        addressname.setText(nametext + " - " + mobileNo);
+//        if(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAlternateMobileNo().equals("")){
+//            addressname.setText(name + " - " + mobileNo);
+//        }
+//        else{
+//            addressname.setText(name + " - " + mobileNo + " or " + DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAlternateMobileNo());
+//        }
+        String flatNo = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFlatNo();
+        String locality = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getLocality();
+        String landmark = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getLandmark();
+        String city = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getCity();
+        String state = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getState();
+
+        address.setText(flatNo +" "+ locality +" " + city +" " + state);
+//        if(landmark.equals("")){
+//            address.setText(flatNo +" "+ locality +" " + city +" " + state);
+//        } else{
+//            address.setText(flatNo +" "+ locality +" " + landmark +" " + city +" " + state);
+//        }
+        pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
     }
 }
