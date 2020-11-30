@@ -146,30 +146,30 @@ public class MainActivity extends AppCompatActivity
         if(currentUser == null){
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
         }else {
-            FirebaseFirestore.getInstance().collection("USERS").document(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful()){
-                        DBqueries.fullname = task.getResult().getString("Name");
-                        DBqueries.email = task.getResult().getString("email");
-                        DBqueries.profile = task.getResult().getString("profile");
+                FirebaseFirestore.getInstance().collection("USERS").document(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DBqueries.fullname = task.getResult().getString("Name");
+                            DBqueries.email = task.getResult().getString("email");
+                            DBqueries.profile = task.getResult().getString("profile");
 
-                        fullname.setText(DBqueries.fullname);
-                        email.setText(DBqueries.email);
+                            fullname.setText(DBqueries.fullname);
+                            email.setText(DBqueries.email);
 
-                        if(DBqueries.profile.equals("")){
-                            addProfileIcon.setVisibility(View.VISIBLE);
-                        }else{
-                            addProfileIcon.setVisibility(View.INVISIBLE);
-                            Glide.with(MainActivity.this).load(DBqueries.profile).apply(new RequestOptions().placeholder(R.drawable.user)).into(profileView);
+                            if (DBqueries.profile.equals("")) {
+                                addProfileIcon.setVisibility(View.VISIBLE);
+                            } else {
+                                addProfileIcon.setVisibility(View.INVISIBLE);
+                                Glide.with(MainActivity.this).load(DBqueries.profile).apply(new RequestOptions().placeholder(R.drawable.user)).into(profileView);
+                            }
+
+                        } else {
+                            String error = task.getException().getMessage();
+                            Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
                         }
-
-                    }else{
-                        String error = task.getException().getMessage();
-                        Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
                     }
-                }
-            });
+                });
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
         }
     }

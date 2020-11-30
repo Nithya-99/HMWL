@@ -135,6 +135,7 @@ public class MyAccountFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         //if(loadingDialog.isShowing()){
             if (DBqueries.addressesModelList.size() == 0) {
                 addressname.setText("No Address");

@@ -19,7 +19,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 
 import java.util.ArrayList;
@@ -35,6 +39,7 @@ public class UpdatePasswordFragment extends Fragment {
 
     private EditText oldPassword, newPassword, confirmNewPassword;
     private Button updateBtn;
+    private String email;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,6 +51,8 @@ public class UpdatePasswordFragment extends Fragment {
         newPassword = view.findViewById(R.id.new_password);
         confirmNewPassword = view.findViewById(R.id.confirm_new_password);
         updateBtn = view.findViewById(R.id.update_password_btn);
+
+        email = getArguments().getString("Email");
 
         oldPassword.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,6 +105,13 @@ public class UpdatePasswordFragment extends Fragment {
             }
         });
 
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkEmailAndPassword();
+            }
+        });
+
         return view;
     }
 
@@ -124,6 +138,37 @@ public class UpdatePasswordFragment extends Fragment {
     private void checkEmailAndPassword(){
         if(newPassword.getText().toString().equals(confirmNewPassword.getText().toString())){
             ///update password
+            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            AuthCredential credential = EmailAuthProvider
+                    .getCredential(email, oldPassword.getText().toString());
+
+            user.reauthenticate(credential)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                user.updatePassword(newPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()){
+                                            oldPassword.setText(null);
+                                            newPassword.setText(null);
+                                            confirmNewPassword.setText(null);
+                                            //getActivity().finish();
+                                            Toast.makeText(getContext(),"Password updated successfully!",Toast.LENGTH_LONG).show();
+                                        }else {
+
+                                            String error = task.getException().getMessage();
+                                            Toast.makeText(getContext(),error,Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                            }else {
+                                String error = task.getException().getMessage();
+                                Toast.makeText(getContext(),error,Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
         }else{
             confirmNewPassword.setError("Password doesn't match!");
         }
