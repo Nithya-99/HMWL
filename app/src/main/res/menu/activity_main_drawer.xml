@@ -17,10 +17,6 @@
             android:icon="@drawable/cart_icon1"
             android:title="My Cart" />
         <item
-            android:id="@+id/nav_my_wishlist"
-            android:icon="@drawable/wishlist_icon"
-            android:title="My Wishlist" />
-        <item
             android:id="@+id/nav_my_account"
             android:icon="@drawable/myaccount_icon"
             android:title="My Account" />

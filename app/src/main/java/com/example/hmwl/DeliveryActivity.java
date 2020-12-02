@@ -3,6 +3,7 @@ package com.example.hmwl;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,7 +38,9 @@ import android.widget.Toast;
 //import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 
 import com.razorpay.Checkout;
+import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultListener;
+import com.razorpay.PaymentResultWithDataListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class DeliveryActivity extends AppCompatActivity implements PaymentResultListener {
+public class DeliveryActivity extends AppCompatActivity implements PaymentResultWithDataListener {
     //private Toolbar toolbar;
     private RecyclerView deliveryRecyclerView;
     private Button changeOrAddNewAddressBtn;
@@ -63,6 +66,10 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
     private Dialog loadingDialog;
     ImageButton paytm, cod;
     public CartAdapter cartAdapter;
+    private ConstraintLayout orderConfirmationLayout;
+    private ImageButton continueShoppingBtn;
+    private TextView orderId;
+
 
     public static final int SELECT_ADDRESS = 0;
 
@@ -87,6 +94,7 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
         pincode = findViewById(R.id.pincode);
         continueBtn = findViewById(R.id.cart_continue_btn);
 
+
 //        loadingDialog = new Dialog(DeliveryActivity.this);
 //        loadingDialog.setContentView(R.layout.loading_progress_dialog);
 //        loadingDialog.setCancelable(false);
@@ -100,6 +108,9 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
         paymentMethodDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         paytm = paymentMethodDialog.findViewById(R.id.paytm);
         cod = paymentMethodDialog.findViewById(R.id.cod_btn);
+        orderConfirmationLayout = findViewById(R.id.order_conformation_layout);
+        continueShoppingBtn = findViewById(R.id.continue_shopping_btn);
+        orderId = findViewById(R.id.order_id);
 
 
 
@@ -129,15 +140,22 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
             }
         });
 
-//        cod.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                paymentMethodDialog.dismiss();
-//                Intent otpIntent = new Intent(DeliveryActivity.this,OTPverificationActivity.class);
+        cod.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                paymentMethodDialog.dismiss();
+//                Intent otpIntent = new Intent(DeliveryActivity.this,.class);
 //                otpIntent.putExtra("mobileNo",mobileNo.substring(0,10));
 //                startActivity(otpIntent);
-//            }
-//        });
+                orderConfirmationLayout.setVisibility(View.VISIBLE);
+                continueShoppingBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        finish();
+                    }
+                });
+            }
+        });
         Checkout.preload(getApplicationContext());
 
         paytm.setOnClickListener(new View.OnClickListener() {
@@ -197,6 +215,36 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
         super.onPause();
     }
 
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+
+        if (MainActivity.mainActivity != null){
+            MainActivity.mainActivity.finish();
+            MainActivity.mainActivity = null;
+            MainActivity.showCart = false;
+        }
+        if (ProductDetailsActivity.productDettailsActivity != null){
+            ProductDetailsActivity.productDettailsActivity.finish();
+            ProductDetailsActivity.productDettailsActivity = null;
+        }
+
+        Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show();
+//        String O_ID = paymentData.getOrderId();
+        orderId.setText("Order ID: "+"15246"+mobileNo);
+        orderConfirmationLayout.setVisibility(View.VISIBLE);
+        continueShoppingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
     ////Start Payment
 
     public void startPayment() {
@@ -222,13 +270,4 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
 
     ////Start Payment
 
-    @Override
-    public void onPaymentSuccess(String s) {
-        Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPaymentError(int i, String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-    }
 }

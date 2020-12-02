@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -46,6 +47,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private ViewPager ProductImagesViewPager;
     private TextView productTitle, productPrice, tvCodIndicator;
     private ImageView codIndicator;
+    public static Activity productDettailsActivity;
 
     private ConstraintLayout productDetailsTabsContainer;
     private ViewPager ProductDetailsViewPager;
@@ -213,6 +215,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 //                        startActivity(deliveryIntent);
 //                    }
 
+                    productDettailsActivity = ProductDetailsActivity.this;
                     Intent deliveryIntent = new Intent(ProductDetailsActivity.this, DeliveryActivity.class);
                     startActivity(deliveryIntent);
                 }
@@ -334,7 +337,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
-
+            productDettailsActivity  = null;
             finish();
             return true;
         }else if(id == R.id.main_search_icon){
@@ -356,4 +359,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        productDettailsActivity = null;
+        super.onBackPressed();
+    }
 }

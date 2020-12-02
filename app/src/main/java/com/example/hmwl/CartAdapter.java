@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.L;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -212,15 +213,15 @@ public class CartAdapter extends RecyclerView.Adapter {
             totalAmount.setText("Rs."+totalAmountText+"/-");
             cartTotalAmount.setText("Rs."+totalAmountText+"/-");
             savedAmount.setText("you saved Rs."+savedAmountText+"/- on this product");
-//            LinearLayout parent = (LinearLayout) cartTotalAmount.getParent().getParent();
-//
-//            if (totalItemPriceText == 0){
-//                DBqueries.cartItemModelList.remove(DBqueries.cartItemModelList.size()-1);
-//                parent.setVisibility(View.GONE);
-//            }
-//            else{
-//                parent.setVisibility(View.VISIBLE);
-//            }
+            LinearLayout parent = (LinearLayout) cartTotalAmount.getParent().getParent();
+
+            if (totalItemPriceText == 0){
+                DBqueries.cartItemModelList.remove(DBqueries.cartItemModelList.size()-1);
+                parent.setVisibility(View.GONE);
+            }
+            else{
+                parent.setVisibility(View.VISIBLE);
+            }
 //            deliveryPrice.setText(deliveryPriceText);
 //            totalAmount.setText(totalAmountText);
 //            savedAmount.setText(savedAmountText);

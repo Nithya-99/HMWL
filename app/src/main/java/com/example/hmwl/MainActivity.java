@@ -1,6 +1,7 @@
 package com.example.hmwl;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseUser currentUser;
     private int scrollFlags;
     private AppBarLayout.LayoutParams params;
+    public static Activity mainActivity;
 
     @SuppressLint("WrongConstant")
     @Override
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity
         addProfileIcon = navigationView.getHeaderView(0).findViewById(R.id.add_profile_icon);
 
         if (showCart){
+            mainActivity = this;
             drawer.setDrawerLockMode(1);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             gotoFragment("My Cart",new MyCartFragment(), -2);
@@ -185,6 +188,7 @@ public class MainActivity extends AppCompatActivity
                 super.onBackPressed();
             }else {
                 if (showCart){
+                    mainActivity =null;
                     showCart = false;
                     finish();
                 }else {
@@ -230,6 +234,7 @@ public class MainActivity extends AppCompatActivity
             return true;
         }else if (id == android.R.id.home){
             if (showCart){
+                mainActivity = null;
                 showCart = false;
                 finish();
                 return true;
@@ -265,8 +270,6 @@ public class MainActivity extends AppCompatActivity
                 gotoFragment("My Orders", new MyOrderFragment(), ORDERS_FRAGMENT);
             } else if (id == R.id.nav_my_cart) {
                 gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
-            } else if (id == R.id.nav_my_wishlist) {
-
             } else if (id == R.id.nav_my_account) {
                 gotoFragment("My Account", new MyAccountFragment(), ACCOUNT_FRAGMENT);
             } else if (id == R.id.nav_sign_out) {
