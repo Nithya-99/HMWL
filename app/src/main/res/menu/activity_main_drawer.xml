@@ -20,6 +20,10 @@
             android:id="@+id/nav_my_account"
             android:icon="@drawable/myaccount_icon"
             android:title="My Account" />
+        <item
+            android:id="@+id/nav_my_aboutus"
+            android:icon="@drawable/aboutus"
+            android:title="About Us" />
     </group>
     <item
         android:id="@+id/nav_sign_out"

@@ -2,21 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hmwl">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="HandmadeWithLove"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".UpdateUserInfoActivity"></activity>
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".AboutUsActivity"></activity>
+        <activity android:name=".UpdateUserInfoActivity" />
         <activity android:name=".MyAdressesActivity" />
         <activity android:name=".AddAddressActivity" />
         <activity android:name=".DeliveryActivity" />
@@ -40,9 +35,19 @@
         </activity>
 
         <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_key" />
+        <meta-data
             android:name="com.razorpay.ApiKey"
-            android:value="rzp_test_NqaAxQkUhl7YL1"/>
-
+            android:value="rzp_test_NqaAxQkUhl7YL1" />
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 </manifest>

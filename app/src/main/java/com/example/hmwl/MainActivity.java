@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity
     private static final int HOME_FRAGMENT = 0;
     private static final int CART_FRAGMENT = 1;
     private static final int ACCOUNT_FRAGMENT = 5;
+    private static final int ABOUTUS_FRAGMENT = 6;
     private NavigationView navigationView;
     private int currentFragment=-1;
     private Dialog signInDialog;
@@ -272,7 +273,11 @@ public class MainActivity extends AppCompatActivity
                 gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
             } else if (id == R.id.nav_my_account) {
                 gotoFragment("My Account", new MyAccountFragment(), ACCOUNT_FRAGMENT);
-            } else if (id == R.id.nav_sign_out) {
+            } else if (id == R.id.nav_my_aboutus) {
+                Intent aboutUs = new Intent(this,AboutUsActivity.class);
+                startActivity(aboutUs);
+                //gotoFragment("About Us", new AboutUsFragment(), ABOUTUS_FRAGMENT);
+            }else if (id == R.id.nav_sign_out) {
                 FirebaseAuth.getInstance().signOut();
                 DBqueries.clearData();
                 Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
