@@ -2,6 +2,8 @@ package com.example.hmwl;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -39,6 +42,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -49,6 +53,9 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UpdateInfoFragment extends Fragment {
+
+    private static final int IMAGE_CAPTURE_CODE = 1001;
+    private static final int PERMISSION_CODE = 1000;
 
     public UpdateInfoFragment() {
         // Required empty public constructor
@@ -61,6 +68,7 @@ public class UpdateInfoFragment extends Fragment {
     private String name,email,photo;
     private Uri imageUri;
     private boolean updatePhoto = false;
+
 
 
     @Override
@@ -96,10 +104,27 @@ public class UpdateInfoFragment extends Fragment {
         changePhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(),"Clicked",Toast.LENGTH_LONG).show();
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-                galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent,1);
+                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                    if (getContext().checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || getContext()
+                            .checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                        String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        requestPermissions(permission, PERMISSION_CODE);
+                    } else {
+                        openCamera();
+                    }
+                } else{
+                    openCamera();
+                }
+
+                //CropImage.activity().setAspectRatio(1,1).start();
+
+
+//                Toast.makeText(getContext(),"Clicked",Toast.LENGTH_LONG).show();
+//                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+//                galleryIntent.setType("image/*");
+//                startActivityForResult(galleryIntent,1);
+
+
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //                    if (getContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
 //                        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
@@ -167,6 +192,16 @@ public class UpdateInfoFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void openCamera() {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE,"New Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION,"From the Camera");
+        imageUri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
     }
 
     private void checkInputs(){
@@ -303,8 +338,8 @@ public class UpdateInfoFragment extends Fragment {
                             DBqueries.profile = "";
 
                             Map<String, Object> updateData = new HashMap<>();
-                            updateData.put("Name", emailField.getText().toString().trim());
-                            updateData.put("email", nameField.getText().toString().trim());
+                            updateData.put("Name", nameField.getText().toString().trim());
+                            updateData.put("email", emailField.getText().toString().trim());
                             updateData.put("profile", "");
 
                             updateFields(user,updateData);
@@ -329,8 +364,8 @@ public class UpdateInfoFragment extends Fragment {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
                     if(updateData.size() > 1){
-                        DBqueries.email = emailField.getText().toString().trim();
                         DBqueries.fullname = nameField.getText().toString().trim();
+                        DBqueries.email = emailField.getText().toString().trim();
                     }else {
                         DBqueries.fullname = nameField.getText().toString().trim();
                     }
@@ -364,11 +399,12 @@ public class UpdateInfoFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == 2){
+        if (requestCode == 2 || PERMISSION_CODE == 1000){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-                galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent,1);
+                openCamera();
+//                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+//                galleryIntent.setType("image/*");
+//                startActivityForResult(galleryIntent,1);
             }else{
                 Toast.makeText(getContext(),"Permission Denied!",Toast.LENGTH_LONG).show();
             }

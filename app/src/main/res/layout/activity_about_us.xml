@@ -28,6 +28,23 @@
                 android:src="@drawable/punitha"
                 app:civ_border_color="@color/colorAccent"
                 app:civ_border_width="5dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_background"
+                android:elevation="4dp"
+                android:layout_margin="10dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:typeface="serif"
+                    android:textAlignment="center"
+                    android:text="Hi, I am Mrs. Punitha Kannan. My Passion for design started as a child. I loved the process of connecting to my heart, designing and knotting each gemstone and infusing them with positive intentions and affirmations. My passion towards designing gave birth to ‘Handmade with Love’"/>
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
