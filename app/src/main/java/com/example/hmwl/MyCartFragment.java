@@ -52,19 +52,6 @@ public class MyCartFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         cartItemsRecyclerView.setLayoutManager(layoutManager);
 
-        if (DBqueries.cartItemModelList.size() == 0){
-            DBqueries.cartList.clear();
-//            LinearLayout parent = (LinearLayout) totalAmount.getParent().getParent();
-//            parent.setVisibility(View.GONE);
-            DBqueries.loadCartList(getContext(),true);
-        }
-        else{
-//            if (DBqueries.cartItemModelList.get(DBqueries.cartItemModelList.size()-1).getType() == CartItemModel.TOTAL_AMOUNT){
-//                LinearLayout parent = (LinearLayout) totalAmount.getParent().getParent();
-//                parent.setVisibility(View.VISIBLE);
-//            }
-            //loadingDialog.dismiss();
-        }
         loadingDialog.dismiss();
 //        List<CartItemModel> cartItemModelList = new ArrayList<>();
 //        cartItemModelList.add(new CartItemModel(1,"Price (3 Items)", "Rs.2500/-","Free","You saved Rs.501/- in this order","2500/-"));
@@ -76,10 +63,31 @@ public class MyCartFragment extends Fragment {
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DeliveryActivity.fromCart = true;
                 loadingDialog.show();
                 DBqueries.loadAddresses(getContext(), loadingDialog,true);
             }
         });
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (DBqueries.cartItemModelList.size() == 0){
+            DBqueries.cartList.clear();
+//            LinearLayout parent = (LinearLayout) totalAmount.getParent().getParent();
+//            parent.setVisibility(View.GONE);
+            DBqueries.loadCartList(getContext(),true, totalAmount);
+        }
+        else{
+            if (DBqueries.cartItemModelList.get(DBqueries.cartItemModelList.size()-1).getType() == CartItemModel.TOTAL_AMOUNT){
+                LinearLayout parent = (LinearLayout) totalAmount.getParent().getParent();
+                parent.setVisibility(View.VISIBLE);
+            }
+//            loadingDialog.dismiss();
+        }
+
     }
 }

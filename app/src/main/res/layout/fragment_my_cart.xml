@@ -22,9 +22,10 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="56dp"
+        android:background="@drawable/round_background"
         android:elevation="8dp"
         android:orientation="horizontal"
-        android:background="@drawable/round_background"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -33,9 +34,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:elevation="3dp"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:elevation="3dp"
             android:paddingStart="16dp">
 
             <TextView
@@ -52,9 +53,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Amount"
                 android:layout_gravity="right"
                 android:layout_marginRight="45dp"
+                android:text="Total Amount"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -63,15 +64,15 @@
             android:id="@+id/cart_continue_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:layout_weight="1"
             android:background="@color/green"
-            android:textColor="@color/colorAccent"
             android:text="continue"
+            android:textColor="@color/colorAccent"
             android:textSize="16sp"
             android:textStyle="bold" />
 

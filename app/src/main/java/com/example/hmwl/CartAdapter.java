@@ -175,7 +175,7 @@ public class CartAdapter extends RecyclerView.Adapter {
                     if (!ProductDetailsActivity.running_cart_query){
                         ProductDetailsActivity.running_cart_query = true;
 
-                        DBqueries.removeFromCart(position,itemView.getContext());
+                        DBqueries.removeFromCart(position,itemView.getContext(),cartTotalAmount);
                     }
                 }
             });
@@ -209,7 +209,6 @@ public class CartAdapter extends RecyclerView.Adapter {
             else{
                 deliveryPrice.setText("Rs."+deliveryPriceText+"/-");
             }
-            totalAmount.setText("Rs."+totalAmountText+"/-");
             totalAmount.setText("Rs."+totalAmountText+"/-");
             cartTotalAmount.setText("Rs."+totalAmountText+"/-");
             savedAmount.setText("you saved Rs."+savedAmountText+"/- on this product");

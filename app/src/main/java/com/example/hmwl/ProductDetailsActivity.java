@@ -140,7 +140,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                             if (currentUser != null){
                                 if (DBqueries.cartList.size() == 0){
-                                    DBqueries.loadCartList(ProductDetailsActivity.this, false);
+                                    DBqueries.loadCartList(ProductDetailsActivity.this, false, new TextView(ProductDetailsActivity.this));
                                 }
                             }
 
@@ -198,14 +198,16 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 if(currentUser == null){
                     signInDialog.show();
                 }else{
-//                    DeliveryActivity.cartItemModelList = new ArrayList<>();
-//                    DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, documentSnapshot.get("product_image_1").toString()
-//                            , documentSnapshot.get("product_title").toString()
-//                            , documentSnapshot.get("product_price").toString()
-//                            , (Integer) 1
-//                            ,(long) documentSnapshot.get("max-quantity")));
+                    DeliveryActivity.fromCart = false;
+                    DeliveryActivity.cartItemModelList.clear();
+                    DeliveryActivity.cartItemModelList = new ArrayList<>();
+                    DBqueries.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString()
+                            , documentSnapshot.get("product_title").toString()
+                            , documentSnapshot.get("product_price").toString()
+                            , (Integer) 1
+                            ,(long) documentSnapshot.get("max-quantity")));
 
-//                    DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.TOTAL_AMOUNT));
+                    DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.TOTAL_AMOUNT));
 
 //                    if (DBqueries.addressesModelList.size() == 0) {
 //                        DBqueries.loadAddresses(ProductDetailsActivity.this,loadingDialog,);
@@ -245,7 +247,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
 
                                         if (DBqueries.cartItemModelList.size() != 0) {
-                                            DBqueries.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString()
+                                            DBqueries.cartItemModelList.add(0,new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString()
                                                     , documentSnapshot.get("product_title").toString()
                                                     , documentSnapshot.get("product_price").toString()
                                                     , (Integer) 1
@@ -309,7 +311,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         if (currentUser != null){
             if (DBqueries.cartList.size() == 0){
-                DBqueries.loadCartList(ProductDetailsActivity.this, false);
+                DBqueries.loadCartList(ProductDetailsActivity.this, false, new TextView(ProductDetailsActivity.this));
             }
         }
 

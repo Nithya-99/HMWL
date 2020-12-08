@@ -4,6 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -96,7 +99,7 @@ public class DBqueries {
                 });
     }
 
-    public static void loadCartList(final Context context, final boolean loadProductData){
+    public static void loadCartList(final Context context, final boolean loadProductData, final TextView cartTotalAmount){
         cartList.clear();
         firebaseFirestore.collection("USERS")
                 .document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_CART")
@@ -133,6 +136,8 @@ public class DBqueries {
 
                                         if (cartList.size() == 1){
                                             cartItemModelList.add(new CartItemModel(CartItemModel.TOTAL_AMOUNT));
+                                            LinearLayout parent = (LinearLayout) cartTotalAmount.getParent().getParent();
+                                            parent.setVisibility(View.VISIBLE);
                                         }
                                         if (cartList.size() == 0){
                                             cartItemModelList.clear();
@@ -153,7 +158,7 @@ public class DBqueries {
         });
     }
 
-    public static void removeFromCart(final int index, final Context context){
+    public static void removeFromCart(final int index, final Context context,final TextView cartTotalAmount){
 
         final String removedProductId = cartList.get(index);
         cartList.remove(index);
@@ -178,8 +183,8 @@ public class DBqueries {
                         MyCartFragment.cartAdapter.notifyDataSetChanged();
                     }
                     if (cartList.size() == 0 ){
-//                        LinearLayout parent = (LinearLayout) cartTotalAmount.getParent().getParent();
-//                        parent.setVisibility(View.GONE);
+                        LinearLayout parent = (LinearLayout) cartTotalAmount.getParent().getParent();
+                        parent.setVisibility(View.GONE);
                         cartItemModelList.clear();
                     }
                     Toast.makeText(context, "removed successfully!!", Toast.LENGTH_SHORT).show();
@@ -252,6 +257,7 @@ public class DBqueries {
         loadedCategoriesName.clear();
         cartList.clear();
         cartItemModelList.clear();
+        addressesModelList.clear();
     }
 
 }

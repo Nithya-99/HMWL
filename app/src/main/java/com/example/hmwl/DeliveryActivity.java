@@ -37,6 +37,10 @@ import android.widget.Toast;
 //import com.paytm.pgsdk.PaytmPGService;
 //import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultListener;
@@ -69,6 +73,8 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
     private ConstraintLayout orderConfirmationLayout;
     private ImageButton continueShoppingBtn;
     private TextView orderId;
+    private boolean successResponse = false;
+    public static boolean fromCart;
 
 
     public static final int SELECT_ADDRESS = 0;
@@ -217,7 +223,7 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
 
     @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
-
+        successResponse = true;
         if (MainActivity.mainActivity != null){
             MainActivity.mainActivity.finish();
             MainActivity.mainActivity = null;
@@ -226,6 +232,38 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
         if (ProductDetailsActivity.productDettailsActivity != null){
             ProductDetailsActivity.productDettailsActivity.finish();
             ProductDetailsActivity.productDettailsActivity = null;
+        }
+
+        Map<String, Object> updateCartList = new HashMap<>();
+        if (fromCart){
+            long cartListSize = 0;
+            List<Integer> indexList = new ArrayList<>();
+
+            for (int x=0; x < DBqueries.cartList.size(); x++){
+//                updateCartList.put("product_ID_"+cartListSize, cartItemModelList.get(x).getProductID());
+//                cartListSize++;
+                indexList.add(x);
+            }
+            updateCartList.put("list_size", cartListSize);
+
+            FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid())
+                    .collection("USER_DATA")
+                    .document("MY_CART").set(updateCartList).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()){
+                        for (int x = 0;x < indexList.size(); x++){
+                            DBqueries.cartList.remove(indexList.get(x).intValue());
+                            DBqueries.cartItemModelList.remove(indexList.get(x).intValue());
+                            DBqueries.cartItemModelList.remove(DBqueries.cartItemModelList.size()-1);
+                        }
+                    } else {
+                        String error = task.getException().getMessage();
+                        Toast.makeText(DeliveryActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
         }
 
         Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show();
@@ -242,7 +280,7 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
 
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
 
     ////Start Payment
@@ -270,4 +308,13 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
 
     ////Start Payment
 
+
+    @Override
+    public void onBackPressed() {
+        if (successResponse){
+            finish();
+            return;
+        }
+        super.onBackPressed();
+    }
 }
