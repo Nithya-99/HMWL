@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity
         if(currentUser == null){
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
         }else {
+            if (DBqueries.email == null) {
                 FirebaseFirestore.getInstance().collection("USERS").document(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity
                                 addProfileIcon.setVisibility(View.VISIBLE);
                             } else {
                                 addProfileIcon.setVisibility(View.INVISIBLE);
-                                Glide.with(MainActivity.this).load(DBqueries.profile).apply(new RequestOptions().placeholder(R.drawable.user)).into(profileView);
+                                Glide.with(MainActivity.this).load(DBqueries.profile).apply(new RequestOptions().placeholder(R.drawable.profile_placeholder)).into(profileView);
                             }
 
                         } else {
@@ -174,6 +175,18 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                 });
+            }else {
+                fullname.setText(DBqueries.fullname);
+                email.setText(DBqueries.email);
+
+                if (DBqueries.profile.equals("")) {
+                    profileView.setImageResource(R.drawable.profile_placeholder);
+                    addProfileIcon.setVisibility(View.VISIBLE);
+                } else {
+                    addProfileIcon.setVisibility(View.INVISIBLE);
+                    Glide.with(MainActivity.this).load(DBqueries.profile).apply(new RequestOptions().placeholder(R.drawable.profile_placeholder)).into(profileView);
+                }
+            }
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
         }
     }
@@ -220,13 +233,15 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.main_search_icon) {
-            //todo: search
-            return true;
-        }else if(id == R.id.main_notification_icon){
-            //todo: notification
-            return true;
-        }else if(id == R.id.mai_cart_icon){
+//        if (id == R.id.main_search_icon) {
+//            Intent searchIntent = new Intent(this, SearchActivity.class);
+//            startActivity(searchIntent);
+//            return true;
+//        }else if(id == R.id.main_notification_icon){
+//            //todo: notification
+//            return true;
+//        }else
+        if(id == R.id.mai_cart_icon){
             if(currentUser == null){
                 signInDialog.show();
             }else{
@@ -259,7 +274,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
         Button button;
 
         if(currentUser != null) {

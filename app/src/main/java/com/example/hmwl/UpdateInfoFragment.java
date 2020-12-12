@@ -68,6 +68,7 @@ public class UpdateInfoFragment extends Fragment {
     private String name,email,photo;
     private Uri imageUri;
     private boolean updatePhoto = false;
+    private Dialog loadingDialog;
 
 
 
@@ -84,6 +85,12 @@ public class UpdateInfoFragment extends Fragment {
         nameField = view.findViewById(R.id.name);
         emailField = view.findViewById(R.id.email);
 
+        loadingDialog = new Dialog(getContext());
+        loadingDialog.setContentView(R.layout.loading_progress_dialog);
+        loadingDialog.setCancelable(false);
+        loadingDialog.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.slider_background));
+        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
         passwordDialog = new Dialog(getContext());
         passwordDialog.setContentView(R.layout.password_confirmation_dialog);
         passwordDialog.setCancelable(true);
@@ -97,7 +104,7 @@ public class UpdateInfoFragment extends Fragment {
         email = getArguments().getString("Email");
         photo = getArguments().getString("Photo");
 
-        Glide.with(getContext()).load(photo).into(circleImageView);
+        Glide.with(getContext()).load(photo).placeholder(R.drawable.profile_placeholder).into(circleImageView);
         nameField.setText(name);
         emailField.setText(email);
 
@@ -116,28 +123,10 @@ public class UpdateInfoFragment extends Fragment {
                     openCamera();
                 }
 
-                //CropImage.activity().setAspectRatio(1,1).start();
-
-
 //                Toast.makeText(getContext(),"Clicked",Toast.LENGTH_LONG).show();
 //                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
 //                galleryIntent.setType("image/*");
 //                startActivityForResult(galleryIntent,1);
-
-
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    if (getContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-//                        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-//                        galleryIntent.setType("image/*");
-//                        startActivityForResult(galleryIntent,1);
-//                    } else {
-//                        getActivity().requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
-//                    }
-//                } else {
-//                    Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-//                    galleryIntent.setType("image/*");
-//                    startActivityForResult(galleryIntent,1);
-//                }
             }
         });
 
@@ -199,6 +188,7 @@ public class UpdateInfoFragment extends Fragment {
         values.put(MediaStore.Images.Media.TITLE,"New Picture");
         values.put(MediaStore.Images.Media.DESCRIPTION,"From the Camera");
         imageUri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
@@ -308,6 +298,7 @@ public class UpdateInfoFragment extends Fragment {
 
                                             }else {
                                                 DBqueries.profile = "";
+                                                Glide.with(getContext()).load(R.drawable.profile_placeholder).into(circleImageView);
                                                 String error = task.getException().getMessage();
                                                 Toast.makeText(getContext(),error,Toast.LENGTH_LONG).show();
                                             }
@@ -382,17 +373,22 @@ public class UpdateInfoFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
-            if (resultCode == getActivity().RESULT_OK){
-                if(data != null){
-                    imageUri = data.getData();
-                    updatePhoto = true;
-                    Glide.with(getContext()).load(imageUri).into(circleImageView);
-                } else {
-                    Toast.makeText(getContext(),"Image not found!",Toast.LENGTH_LONG).show();
-                }
-            }
+        if (resultCode == getActivity().RESULT_OK){
+            circleImageView.setImageURI(imageUri);
+            updatePhoto = true;
         }
+//        if (requestCode == 1){
+//            if (resultCode == getActivity().RESULT_OK){
+//                if(data != null){
+//                    imageUri = data.getData();
+//                    updatePhoto = true;
+//                    circleImageView.setImageURI(imageUri);
+//                    Glide.with(getContext()).load(imageUri).into(circleImageView);
+//                } else {
+//                    Toast.makeText(getContext(),"Image not found!",Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -401,6 +397,7 @@ public class UpdateInfoFragment extends Fragment {
 
         if (requestCode == 2 || PERMISSION_CODE == 1000){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
                 openCamera();
 //                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
 //                galleryIntent.setType("image/*");

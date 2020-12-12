@@ -59,11 +59,6 @@ public class MyAccountFragment extends Fragment {
 
         layoutContainer = view.findViewById(R.id.layout_container);
 
-        name.setText(DBqueries.fullname);
-        email.setText(DBqueries.email);
-        if(!DBqueries.profile.equals("")){
-            Glide.with(getContext()).load(DBqueries.profile).apply(new RequestOptions().placeholder(R.drawable.user)).into(profileView);
-        }
         if(DBqueries.addressesModelList.size()==0){
             addressname.setText("No Address");
             address.setText("-");
@@ -136,6 +131,14 @@ public class MyAccountFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        name.setText(DBqueries.fullname);
+        email.setText(DBqueries.email);
+        if(!DBqueries.profile.equals("")){
+            Glide.with(getContext()).load(DBqueries.profile).apply(new RequestOptions().placeholder(R.drawable.profile_placeholder)).into(profileView);
+        } else {
+            profileView.setImageResource(R.drawable.profile_placeholder);
+        }
+
         //if(loadingDialog.isShowing()){
             if (DBqueries.addressesModelList.size() == 0) {
                 addressname.setText("No Address");
@@ -151,12 +154,14 @@ public class MyAccountFragment extends Fragment {
         nametext = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getName();
         mobileNo = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getMobileNo();
         addressname.setText(nametext + " - " + mobileNo);
+
 //        if(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAlternateMobileNo().equals("")){
 //            addressname.setText(name + " - " + mobileNo);
 //        }
 //        else{
 //            addressname.setText(name + " - " + mobileNo + " or " + DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAlternateMobileNo());
 //        }
+        
         String flatNo = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFlatNo();
         String locality = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getLocality();
         String landmark = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getLandmark();

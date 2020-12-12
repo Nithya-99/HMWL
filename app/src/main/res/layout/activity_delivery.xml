@@ -161,7 +161,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:lineHeight="20sp"
-            android:text="You will shortly recive your order conformation message"
+            android:text="You will shortly recive your order confirmation message"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="16sp"

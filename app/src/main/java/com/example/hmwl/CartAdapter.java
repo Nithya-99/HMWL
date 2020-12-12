@@ -84,7 +84,6 @@ public class CartAdapter extends RecyclerView.Adapter {
                     if (cartItemModelList.get(x).getType() == CartItemModel.CART_ITEM){
                         totalItems++;
                         totalItemPrice = totalItemPrice + Integer.parseInt(cartItemModelList.get(x).getProductPrice());
-
                     }
 
                 }
@@ -201,7 +200,7 @@ public class CartAdapter extends RecyclerView.Adapter {
             savedAmount = itemView.findViewById(R.id.saved_amount);
         }
         private void setTotalAmount(int totalItemText,int totalItemPriceText, String deliveryPriceText, int totalAmountText, int savedAmountText){
-            totalItems.setText("Price("+totalItemText+"items");
+            totalItems.setText("Price("+totalItemText+"items)");
             totalItemPrice.setText("Rs."+totalItemPriceText+"/-");
             if (deliveryPriceText.equals("FREE")){
                 deliveryPrice.setText(deliveryPriceText);

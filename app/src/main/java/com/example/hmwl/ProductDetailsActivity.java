@@ -43,7 +43,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     public static boolean running_cart_query = false;
     public static boolean ALREADY_ADDED_TO_CART = false;
-    public static String productID;
+    public static String productID, product_price;
     private ViewPager ProductImagesViewPager;
     private TextView productTitle, productPrice, tvCodIndicator;
     private ImageView codIndicator;
@@ -103,6 +103,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         List<String> productImages = new ArrayList<>();
         productID = getIntent().getStringExtra("PRODUCT_ID");
+        product_price = getIntent().getStringExtra("PRODUCT_PRICE");
         firebaseFirestore.collection("PRODUCTS").document(productID).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -138,11 +139,21 @@ public class ProductDetailsActivity extends AppCompatActivity {
                             ProductDetailsViewPager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(),
                                     ProductDetailsTabLayout.getTabCount(),productDescription,productSpecificationModelList));
 
+
                             if (currentUser != null){
                                 if (DBqueries.cartList.size() == 0){
                                     DBqueries.loadCartList(ProductDetailsActivity.this, false, new TextView(ProductDetailsActivity.this));
                                 }
+//                                if(DBqueries.wishList.size() == 0){
+//                                    DBqueries.loadWishlist(ProductDetailsActivity.this);
+//                                }
                             }
+
+//                            if(DBqueries.wishList.contains(productID)){
+//                                ALREADY_ADDED_TO_WISHLIST = true;
+//                            } else {
+//                                ALREADY_ADDED_TO_WISHLIST = false;
+//                            }
 
                             if (DBqueries.cartList.contains(productID)){
                                 ALREADY_ADDED_TO_CART = true;
@@ -166,6 +177,21 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     ALREADY_ADDED_TO_WISHLIST = false;
                     addToWishlistBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
                 }else{
+
+//                    firebaseFirestore.collection("USERS")
+//                            .document(currentUser.getUid()).collection("USER_DATA").document("MY_WISHLIST")
+//                            .set().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            if(task.isSuccessful()){
+//
+//                            }else{
+//                                String error = task.getException().getMessage();
+//                                Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+
                     ALREADY_ADDED_TO_WISHLIST = true;
                     addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
                 }
@@ -238,16 +264,19 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         } else {
                             Map<String, Object> addProduct = new HashMap<>();
                             addProduct.put("product_ID_" + String.valueOf(DBqueries.cartList.size()), productID);
+                            addProduct.put("product_price_" + String.valueOf(DBqueries.cartList.size()), product_price);
                             addProduct.put("list_size", (long) DBqueries.cartList.size() + 1);
 
-                            firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_CART")
+                            firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA")
+                                    .document("MY_CART")
                                     .update(addProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
 
                                         if (DBqueries.cartItemModelList.size() != 0) {
-                                            DBqueries.cartItemModelList.add(0,new CartItemModel(CartItemModel.CART_ITEM, productID, documentSnapshot.get("product_image_1").toString()
+                                            DBqueries.cartItemModelList.add(0,new CartItemModel(CartItemModel.CART_ITEM, productID,
+                                                    documentSnapshot.get("product_image_1").toString()
                                                     , documentSnapshot.get("product_title").toString()
                                                     , documentSnapshot.get("product_price").toString()
                                                     , (Integer) 1
@@ -342,11 +371,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
             productDettailsActivity  = null;
             finish();
             return true;
-        }else if(id == R.id.main_search_icon){
-            //todo: search
-            return true;
-        }else if(id == R.id.mai_cart_icon){
-            //todo: cart
+        }
+//        else if(id == R.id.main_search_icon){
+//            Intent searchIntent = new Intent(this, SearchActivity.class);
+//            startActivity(searchIntent);
+//            return true;
+//        }
+        else if(id == R.id.mai_cart_icon){
+
             if(currentUser == null){
                 signInDialog.show();
             }
