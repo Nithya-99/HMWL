@@ -146,6 +146,8 @@ public class DBqueries {
 //                                        if (cartList.size() >= 2){
 //                                            index = cartList.size()-2;
 //                                        }
+
+
                                         cartItemModelList.add(index,new CartItemModel(CartItemModel.CART_ITEM, productID
                                                 , task.getResult().get("product_image_1").toString()
                                                 , task.getResult().get("product_title").toString()

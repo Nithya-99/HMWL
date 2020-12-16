@@ -1,5 +1,8 @@
 package com.example.hmwl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CartItemModel {
 
     public static final int CART_ITEM =0;
@@ -22,7 +25,8 @@ public class CartItemModel {
     private String productTitle;
     private String productPrice;
     private int productQuantity;
-    private Long maxQuantity;
+    private Long maxQuantity, stockQuantity;
+    private List<String> qtyIDs;
 
     public CartItemModel(int type, String productID,String productImage, String productTitle, String productPrice, int productQuantity, Long maxQuantity) {
         this.type = type;
@@ -32,6 +36,24 @@ public class CartItemModel {
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
         this.maxQuantity = maxQuantity;
+        this.stockQuantity=stockQuantity;
+        qtyIDs=new ArrayList<>();
+    }
+
+    public List<String> getQtyIDs() {
+        return qtyIDs;
+    }
+
+    public void setQtyIDs(List<String> qtyIDs) {
+        this.qtyIDs = qtyIDs;
+    }
+
+    public Long getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(Long stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 
     public Long getMaxQuantity() {
@@ -86,10 +108,52 @@ public class CartItemModel {
 
     ////cart total
 
+    private int totalItems, totalItemsPrice, totalAmount, savedAmount;
+    private String deliveryPrice;
+
     public CartItemModel(int type) {
         this.type = type;
     }
 
+    public int getTotalItems() {
+        return totalItems;
+    }
+
+    public void setTotalItems(int totalItems) {
+        this.totalItems = totalItems;
+    }
+
+    public int getTotalItemsPrice() {
+        return totalItemsPrice;
+    }
+
+    public void setTotalItemsPrice(int totalItemsPrice) {
+        this.totalItemsPrice = totalItemsPrice;
+    }
+
+    public int getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(int totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public int getSavedAmount() {
+        return savedAmount;
+    }
+
+    public void setSavedAmount(int savedAmount) {
+        this.savedAmount = savedAmount;
+    }
+
+    public String getDeliveryPrice() {
+        return deliveryPrice;
+    }
+
+    public void setDeliveryPrice(String deliveryPrice) {
+        this.deliveryPrice = deliveryPrice;
+    }
     ////cart total
 }
 

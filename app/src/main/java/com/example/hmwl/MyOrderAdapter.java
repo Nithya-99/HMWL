@@ -13,6 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.type.Date;
+
 import java.util.List;
 
 public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewholder> {
@@ -32,13 +35,21 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewhold
 
     @Override
     public void onBindViewHolder(@NonNull MyOrderAdapter.Viewholder viewholder, int position) {
-        int resource = myOrderItemModelList.get(position).getProductImage();
+        String resource = myOrderItemModelList.get(position).getProductImage();
 //        int rating = myOrderItemModelList.get(position).getRating();
         String title = myOrderItemModelList.get(position).getProductTitle();
-        String deliveredDate = myOrderItemModelList.get(position).getDeliveryStatus();
-        String address = myOrderItemModelList.get(position).getOrderAddress();
+        String orderStatus = myOrderItemModelList.get(position).getOrderstatus();
+        Date date;
+//        switch (orderStatus){
+//
+//            case "Ordered":
+//                date = myOrderItemModelList.get(position).getOrderedDate();
+//                break;
+//        }
+//        String deliveredDate = myOrderItemModelList.get(position).getDeliveryStatus();
+        String address = myOrderItemModelList.get(position).getAddress();
 
-        viewholder.setData(resource,title,deliveredDate,address);
+        viewholder.setData(resource,title,address);
     }
 
     @Override
@@ -70,18 +81,18 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewhold
 //                }
 //            });
         }
-        private void setData(int resource,String title, String deliveredDate, String address){
-            productImage.setImageResource(resource);
+        private void setData(String resource,String title, String address){
+            Glide.with(itemView.getContext()).load(resource).into(productImage);
             productTitle.setText(title);
             orderAddress.setText(address);
 
-            if(deliveredDate.equals("Cancelled")) {
-                orderIndicator.setImageTintList(ColorStateList.valueOf(itemView.getContext().getResources().getColor(R.color.colorPrimary)));
-            }
-            else{
-                orderIndicator.setImageTintList(ColorStateList.valueOf(itemView.getContext().getResources().getColor(R.color.successGreen)));
-            }
-            deliveryStatus.setText(deliveredDate);
+//            if(deliveredDate.equals("Cancelled")) {
+//                orderIndicator.setImageTintList(ColorStateList.valueOf(itemView.getContext().getResources().getColor(R.color.colorPrimary)));
+//            }
+//            else{
+//                orderIndicator.setImageTintList(ColorStateList.valueOf(itemView.getContext().getResources().getColor(R.color.successGreen)));
+//            }
+//            deliveryStatus.setText(deliveredDate);
 //////////////////////////////////////////////////////////rating layout
 //            setRating(rating);
 //            for(int x =0; x<rateNowContainer.getChildCount(); x++){
